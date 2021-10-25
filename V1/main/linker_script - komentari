@@ -1,0 +1,52 @@
+MEMORY - komanda za definisanje memorijskih regiona
+{
+	IME_REGIONA (atributi) : ORIGIN = adresa, LENGTH = veličina
+
+	**Komentari:
+	*atributi: r - read, w - write, x - execute, a - allocatable
+	*adresa: početak regiona
+	*veličina: koliko je region veliki, može se dodati K - kilo, M - mega, ...
+	
+}
+
+
+
+
+
+SECTIONS - komanda za rad linkerske skripte sa sekcijama
+{
+	IME_IZLAZNE_SEKCIJE adresa :
+	AT (adresa_LMA) - smešta sekciju na LMA = adresa_LMA (pravu memorijsku lokaciju) 
+	{
+		*ovde se navodi šta sve spada u ovu skeciju (koje sve sekcije + šta sve još)
+		*:  . predstavlja location_counter, trenutna adresa u okviru sekcije (adresa_regiona + položaj_sekcije_u_regionu + location_counter daju poziciju u memoriji)
+		. = . + 5; - trenutna vrednost location_counter će se uvećati za 5
+		. = ALIGN(vrednost_poravnanja); - zahtevamo poravnanje na adresu deljivu sa vrednost_poravnanja
+	
+		BYTE(vrednost)	- dodaje vrednost, ali dodaje i 000000 zbog poravnanja
+		LONG(vrednost)	- dodaje vrednost 4B, u little endian formatu
+		
+		ime_fajla(sekcije_koje_se_mapiraju_u_ovu_izlaznu_sekciju)
+		
+			
+		**Komentari
+		*adresa: ako se ne navede, smešta se nakon poslednje navedene sekcije
+		*ime_fajla: 
+		*	može se koristiti i wildcard * koja reprezentuje sve fajlove sa izabranom sekcijom
+		*sekcije_koje_se_mapiraju_u_ovu_izlaznu_sekciju: 
+		*	COMMON - predstavlja alias za sve common simbole iz *COM* sekcije iz tabele simbola
+		*vrednost
+		*	neka vrednost veličine 1B se umetne na početak sekcije
+		
+	} > (smesti celu izlaznu sekciju) u IME_REGIONA (... nastavak je .)  //*!* -> ovo će da linkeruje - tj preuredi sekciju, tako da su ti podaci prilagodjeni VMA adresama (virtuelnim) i sa njima će da radi sve vreme
+	* ili moze da se radi bez : AT(adresa_LMA) ali onda mora na samom smeštanju u region IME_REGIONA da se navede
+	(. ovde ...) AT> IME_REGIONA_ZA_LMA - ovaj region se definiše u MEMORY naredbi na potpuno isti način kao i svi drugi regioni
+}
+
+*Moguće je napraviti i promenjive u linkerskoj skripti koje dohvataju
+promenjiva_1_VMA = ADDR(IME_IZLAZNE_SEKCIJE); - vma adresu sekcije
+promenjiva_2_LMA = LOADADDR(IME_IZLAZNE_SEKCIJE); - lma adresu sekcije
+* ovi podaci ce se naći u tabeli simbola izlaznog elf fajla
+
+**Komentari:
+*IME_REGIONA se može koristiti da se u njega smeštaju sekcije, a da se onda u SECTIONS ne navodi adresa
