@@ -19,6 +19,8 @@
 	.word .default_handler
 .endr
 
+.extern main
+
 .extern _vma_data_start
 .extern _vma_data_end
 .extern _lma_data_start
