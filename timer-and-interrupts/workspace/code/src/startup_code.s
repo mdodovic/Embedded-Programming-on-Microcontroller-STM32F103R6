@@ -29,6 +29,17 @@
 .weak systick_handler
 .thumb_set systick_handler, default_handler
 
+.weak irq0_WWDG_handler
+.thumb_set irq0_WWDG_handler, default_handler
+
+.weak irq1_PVD_handler
+.thumb_set irq1_PVD_handler, default_handler
+
+.weak irq2_TAMPER_handler
+.thumb_set irq2_TAMPER_handler, default_handler
+
+.weak irq3_RTC_handler
+.thumb_set irq3_RTC_handler, default_handler
 
 
 .section .vector_table, "a"
@@ -48,8 +59,12 @@
 .endr
 .word pendsv_handler             // 14
 .word systick_handler            // 15
-.rept 68                      // irq
-	.word default_handler     // 16 - 83
+.word irq0_WWDG_handler          // 16
+.word irq1_PVD_handler           // 17
+.word irq2_TAMPER_handler        // 18
+.word irq3_RTC_handler           // 19
+.rept 64                      // irq
+	.word default_handler     // 20 - 83
 .endr
 
 .extern _vma_data_start
