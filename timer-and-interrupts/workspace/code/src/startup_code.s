@@ -67,8 +67,8 @@ reset_handler:
 	cmp r1, r2 // r1 < r2
 	beq jump_to_main // if r1 == r2 jmp
 copy_loop:
-	ldr r3,[r0],4
-	str r3,[r1],4
+	ldr r3,[r0],#4
+	str r3,[r1],#4
 	cmp r1, r2 // r1 < r2
 	blo copy_loop // if r1 < r2 jmp
 
