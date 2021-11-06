@@ -1,3 +1,5 @@
+_main_stack_pointer_value = 0x20002800
+
 MEMORY
 {
 	FLASH(rx) : ORIGIN = 0x08000000, LENGTH = 32K
