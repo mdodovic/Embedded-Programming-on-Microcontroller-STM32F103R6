@@ -1,3 +1,4 @@
+#include <stdint.h>
 #include "systic.h"
 
 void systick_init()

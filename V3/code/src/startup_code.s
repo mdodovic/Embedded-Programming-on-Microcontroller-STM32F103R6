@@ -1,4 +1,4 @@
-.cpu cortext-m3
+.cpu cortex-m3
 .fpu softvfp
 .syntax unified
 .thumb
@@ -12,11 +12,11 @@
 .word _main_stack_pointer_value
 .word reset_handler
 .rept 13
-	.word .default_handler
+	.word default_handler
 .endr
 .word systick_handler
 .rept 68
-	.word .default_handler
+	.word default_handler
 .endr
 
 .extern main

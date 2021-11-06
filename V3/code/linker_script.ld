@@ -1,4 +1,4 @@
-_main_stack_pointer_value = 0x20002800
+_main_stack_pointer_value = 0x20002800;
 
 MEMORY
 {

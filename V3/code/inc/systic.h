@@ -6,6 +6,7 @@
 #define STK_VAL (*((uint32_t*) (0xE000E010 + 0x08)))
 #define STK_CALIB (*((uint32_t*) (0xE000E010 + 0x0C)))
 
-
+extern void systick_init();
+extern void systick_handler();
 
 #endif //_SYSTIC_H_
