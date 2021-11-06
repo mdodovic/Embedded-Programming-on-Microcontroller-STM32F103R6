@@ -1,4 +1,4 @@
-_main_stack_pointer_value = 0x20002800
+_main_stack_pointer_value = 0x20002800;
 
 MEMORY
 {
@@ -8,18 +8,18 @@ MEMORY
 
 SECTIONS
 {
-	.vector_table:
+	.vector_table :
 	{
 		*(.vector_table)
 	} > FLASH
 	
-	.text:
+	.text :
 	{
 		*(.text)
 		*(.text*)
 	} > FLASH
 
-	.data:
+	.data :
 	{
 		_vma_data_start = .;
 		*(.data)
@@ -29,13 +29,13 @@ SECTIONS
 	
 	_lma_data_start = LOADADDR(.data);
 	
-	.rodata:
+	.rodata :
 	{
 		*(.rodata)
 		*(.rodata*)
 	} > FLASH
 
-	.bss:
+	.bss :
 	{
 		*(.bss)
 		*(.bss*)
