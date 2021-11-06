@@ -82,3 +82,6 @@ infinite_loop_reset:
 default_handler:
 infinite_loop_default:
 	b infinite_loop_default
+
+.end
+
