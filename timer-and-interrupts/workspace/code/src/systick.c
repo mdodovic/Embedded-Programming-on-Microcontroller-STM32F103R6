@@ -3,7 +3,7 @@
 
 void systick_init()
 {
-	STK->LOAD = 8000000 - 1;
+	STK->LOAD = 8000000 / 2 - 1;
 	STK->VAL = 0;
 	STK->CTRL |= CTRL_ENABLE | CTRL_TICKINT | CTRL_CLKSOURCE;
 }
