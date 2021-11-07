@@ -28,6 +28,10 @@ typedef struct
 #define SCB ((SCB_Register_Map*)(0xE000ED00))
 
 
+#define SCB_CCR_DIV_0_TRP (1 << 4)
+
+#define SCB_SHCRS_DIV_0_TRP (1 << 18)
+
 
 #endif //_SCB_H_
 
