@@ -11,8 +11,8 @@
 .weak hard_fault_handler
 .thumb_set hard_fault_handler, default_handler
 
-.weak memory_fault_handler
-.thumb_set memory_fault_handler, default_handler
+.weak memory_manage_handler
+.thumb_set memory_manage_handler, default_handler
 
 .weak bus_fault_handler
 .thumb_set bus_fault_handler, default_handler
@@ -29,74 +29,76 @@
 .weak systick_handler
 .thumb_set systick_handler, default_handler
 
-.weak irq0_WWDG_handler
-.thumb_set irq0_WWDG_handler, default_handler
+.weak irq0_wwdg_handler
+.thumb_set irq0_wwdg_handler, default_handler
 
-.weak irq1_PVD_handler
-.thumb_set irq1_PVD_handler, default_handler
+.weak irq1_pvd_handler
+.thumb_set irq1_pvd_handler, default_handler
 
-.weak irq2_TAMPER_handler
-.thumb_set irq2_TAMPER_handler, default_handler
+.weak irq2_tamper_handler
+.thumb_set irq2_tamper_handler, default_handler
 
-.weak irq3_RTC_handler
-.thumb_set irq3_RTC_handler, default_handler
+.weak irq3_rtc_handler
+.thumb_set irq3_rtc_handler, default_handler
 
 
 .section .vector_table, "a"
-.word _main_stack_pointer        // 0
-.word reset_handler              // 1
-.word nmi_handler                // 2
-.word hard_fault_handler         // 3
-.word memory_fault_handler       // 4
-.word bus_fault_handler          // 5
-.word usage_fault_handler        // 6
-.rept 4						  // reserver
-	.word default_handler     // 7 - 10
+.word _main_stack_pointer
+.word reset_handler
+.word nmi_handler
+.word hard_fault_handler
+.word memory_manage_handler
+.word bus_fault_handler
+.word usage_fault_handler
+.rept 4
+	.word default_handler
 .endr
-.word svcall_handler             // 11
-.rept 2						  // reserver
-	.word default_handler     // 12 - 13
+.word svcall_handler
+.rept 2
+	.word default_handler
 .endr
-.word pendsv_handler             // 14
-.word systick_handler            // 15
-.word irq0_WWDG_handler          // 16
-.word irq1_PVD_handler           // 17
-.word irq2_TAMPER_handler        // 18
-.word irq3_RTC_handler           // 19
-.rept 64                      // irq
-	.word default_handler     // 20 - 83
+.word pendsv_handler
+.word systick_handler
+.word irq0_wwdg_handler
+.word irq1_pvd_handler
+.word irq2_tamper_handler
+.word irq3_rtc_handler
+.rept 64
+	.word default_handler
 .endr
 
+
+.extern main
 .extern _vma_data_start
 .extern _vma_data_end
 .extern _lma_data_start
-.extern main
 
 .section .text.reset_handler
 .type reset_handler, %function
 reset_handler:
-	ldr r0, =_lma_data_start
-	ldr r1, =_vma_data_start
-	ldr r2, =_vma_data_end
+	ldr r0, =_vma_data_start
+	ldr r1, =_vma_data_end
+	ldr r2, =_lma_data_start
+	cmp r0, r1 // if r0 < r1: move data from lma to vma
+	beq end_of_moving
+move_data:
+	ldr r3, [r2], 4
+	str r3, [r0], 4
+	cmp r0, r1 // if r0 < r1: continue with moving
+	blo move_data
 
-	cmp r1, r2 // r1 < r2
-	beq jump_to_main // if r1 == r2 jmp
-copy_loop:
-	ldr r3,[r0],#4
-	str r3,[r1],#4
-	cmp r1, r2 // r1 < r2
-	blo copy_loop // if r1 < r2 jmp
-
-jump_to_main:
+end_of_moving:
 	b main
-infinite_loop_reset:
-	b infinite_loop_reset
+infinite_reset_handler:
+	b infinite_reset_handler
+
 
 .section .text.default_handler
 .type default_handler, %function
 default_handler:
-infinite_loop_default:
-	b infinite_loop_default
+infinite_default_handler:
+	b infinite_default_handler
 
 .end
+
 
