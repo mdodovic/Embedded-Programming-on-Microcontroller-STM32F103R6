@@ -1,12 +1,12 @@
 <?xml version='1.0' encoding='UTF-8' standalone='yes'?>
 <WORKSPACE>
  <FRAME activewindow="0">
-  <PLACEMENT>2c00000002000000020000000083ffff0083ffffffffffffffffffffaf0300003800000080070000f3030000</PLACEMENT>
+  <PLACEMENT>2c0000000200000003000000ffffffffffffffffffffffffffffffffaf0300003800000080070000f3030000</PLACEMENT>
   <WINDOW type="default" module="ISIS"/>
  </FRAME>
  <MODULE name="VSMDEBUG">
   <PWI>
-   <POPUP w="800" x="38" flags="00000002" y="129" h="200" pid="0" iid="-1">
+   <POPUP w="800" x="38" flags="00000003" y="129" h="200" pid="0" iid="-1">
     <PROPERTIES>
      <ITEM name="Message Column Width">663</ITEM>
      <ITEM name="ShowGrid">No</ITEM>
@@ -31,7 +31,7 @@
      <ITEM name="nItems">0</ITEM>
     </PROPERTIES>
    </POPUP>
-   <POPUP w="16" x="78" flags="0000000b" y="169" h="32" pid="200" iid="1">
+   <POPUP w="16" x="78" flags="0000000a" y="169" h="32" pid="200" iid="1">
     <PROPERTIES>
      <ITEM name="DataType">2</ITEM>
      <ITEM name="DispChars">Yes</ITEM>
@@ -41,7 +41,7 @@
      <ITEM name="TopLineAddress">08000000</ITEM>
     </PROPERTIES>
    </POPUP>
-   <POPUP w="16" x="61" flags="0000000b" y="569" h="32" pid="210" iid="1">
+   <POPUP w="16" x="98" flags="0000000a" y="189" h="32" pid="210" iid="1">
     <PROPERTIES>
      <ITEM name="DataType">2</ITEM>
      <ITEM name="DispChars">Yes</ITEM>
@@ -321,7 +321,7 @@
      <ITEM name="TopLineAddress">40006C00</ITEM>
     </PROPERTIES>
    </POPUP>
-   <POPUP w="16" x="1206" flags="0000000b" y="553" h="32" pid="510" iid="1">
+   <POPUP w="16" x="658" flags="0000000a" y="749" h="32" pid="510" iid="1">
     <PROPERTIES>
      <ITEM name="DataType">2</ITEM>
      <ITEM name="DispChars">Yes</ITEM>
@@ -331,11 +331,13 @@
      <ITEM name="TopLineAddress">E000E000</ITEM>
     </PROPERTIES>
    </POPUP>
-   <POPUP w="600" x="650" flags="0000802b" y="184" h="400" pid="100" iid="1">
+   <POPUP w="600" x="428" flags="0000802b" y="238" h="400" pid="100" iid="1">
     <PROPERTIES>
      <ITEM name="Breakpoint 0">"systick_callback",8000154,0003,BF67,66EA,1
 </ITEM>
-     <ITEM name="Breakpoint 1">"main",8000170,0003,E696,66EA,1
+     <ITEM name="Breakpoint 1">"reset_handler",80001D2,0005,B4E5,25CD,1
+</ITEM>
+     <ITEM name="Breakpoint 2">"reset_handler",80001E6,0019,8416,25CD,1
 </ITEM>
      <ITEM name="CaseSensitive">No</ITEM>
      <ITEM name="DISPADDRS">Yes</ITEM>
@@ -343,10 +345,10 @@
      <ITEM name="DISPOPCODES">No</ITEM>
      <ITEM name="FIXUPBPTS">Yes</ITEM>
      <ITEM name="WordsOnly">No</ITEM>
-     <ITEM name="nBreakpoints">2</ITEM>
+     <ITEM name="nBreakpoints">3</ITEM>
     </PROPERTIES>
    </POPUP>
-   <POPUP w="300" x="1258" flags="0000000b" y="267" h="300" pid="101" iid="1">
+   <POPUP w="300" x="1203" flags="0000000b" y="265" h="300" pid="101" iid="1">
     <PROPERTIES>
      <ITEM name="Address Column Width">94</ITEM>
      <ITEM name="AutoResize">No</ITEM>
@@ -363,7 +365,7 @@
      <ITEM name="nItems">0</ITEM>
     </PROPERTIES>
    </POPUP>
-   <POPUP w="226" x="718" flags="00000009" y="809" h="182" pid="102" iid="1">
+   <POPUP w="226" x="718" flags="00000008" y="809" h="182" pid="102" iid="1">
     <PROPERTIES/>
    </POPUP>
    <POPUP w="170" x="738" flags="00000008" y="829" h="237" pid="191" iid="1">
