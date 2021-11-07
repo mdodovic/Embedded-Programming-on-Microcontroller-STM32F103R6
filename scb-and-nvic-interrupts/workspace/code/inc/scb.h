@@ -27,6 +27,9 @@ typedef struct
 
 #define SCB ((SCB_Register_Map*)(0xE000ED00))
 
+#define SCB_ICSR_NMIPENDSET (1 << 31)
+#define SCB_ICSR_PENDSVSET (1 << 28)
+#define SCB_ICSR_PENDSVCLR (1 << 27)
 
 #define SCB_CCR_DIV_0_TRP (1 << 4)
 #define SCB_CCR_UNALIGN_TRP (1 << 3)

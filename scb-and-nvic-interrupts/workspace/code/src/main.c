@@ -34,13 +34,59 @@ int main()
 	SCB->CCR |= SCB_CCR_UNALIGN_TRP;
 
 	uint32_t unalign_address = 0x80000001;
-	uint32_t unalign_address_access = (*((uint32_t*)(unalign_address)));
+//	uint32_t unalign_address_access = (*((uint32_t*)(unalign_address)));
 
-	__asm__(
-			"mov r0, %[address]\n"
-			"ldr r1, [r0]\n"
-			"ldm r0!, {r1-r3}\n"
-			: [address] "=r" (unalign_address)
+//	__asm__(
+//			"mov r0, %[address]\n"
+//			"ldr r1, [r0]\n"
+//			"ldm r0!, {r1-r3}\n"
+//			: [address] "=r" (unalign_address)
+//	);
+
+	// NMI, PendSV, FAULTMASK
+	// pending NMI
+	SCB->ICSR |= SCB_ICSR_NMIPENDSET;
+	__asm(
+			"nop\n"
+	);
+	// pending PendSV
+	SCB->ICSR |= SCB_ICSR_PENDSVSET;
+	__asm(
+			"nop\n"
+	);
+	// pending NMI and PendSV simultaneously
+	SCB->ICSR |= SCB_ICSR_PENDSVSET | SCB_ICSR_NMIPENDSET;
+	__asm(
+			"nop\n"
+	);
+
+	// FAULTMASK register (mask all except NMI)
+	__asm(
+			"mov r0, 1\n"
+			"msr faultmask, r0"
+	);
+	SCB->ICSR |= SCB_ICSR_PENDSVSET | SCB_ICSR_NMIPENDSET;
+	__asm(
+			"nop\n"
+	);
+	__asm(
+			"mov r0, 0\n"
+			"msr faultmask, r0"
+	);
+
+	// pending NMI and PendSV simultaneuosly and then clear PendSV
+	__asm(
+			"mov r0, 1\n"
+			"msr faultmask, r0"
+	);
+	SCB->ICSR |= SCB_ICSR_PENDSVSET | SCB_ICSR_NMIPENDSET;
+	__asm(
+			"nop\n"
+	);
+	SCB->ICSR |= SCB_ICSR_PENDSVCLR;
+	__asm(
+			"mov r0, 0\n"
+			"msr faultmask, r0"
 	);
 
 	while(1)
