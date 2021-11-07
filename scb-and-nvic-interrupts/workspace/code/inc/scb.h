@@ -29,8 +29,10 @@ typedef struct
 
 
 #define SCB_CCR_DIV_0_TRP (1 << 4)
+#define SCB_CCR_UNALIGN_TRP (1 << 3)
 
-#define SCB_SHCRS_DIV_0_TRP (1 << 18)
+
+#define SCB_SHCRS_USAGEFAULTENA (1 << 18)
 
 
 #endif //_SCB_H_
