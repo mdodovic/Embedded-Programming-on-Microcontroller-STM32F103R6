@@ -74,7 +74,7 @@ int main()
 			"msr faultmask, r0"
 	);
 
-	// pending NMI and PendSV simultaneuosly and then clear PendSV
+	// pending NMI and PendSV simultaneously and then clear PendSV
 	__asm(
 			"mov r0, 1\n"
 			"msr faultmask, r0"
@@ -88,6 +88,32 @@ int main()
 			"mov r0, 0\n"
 			"msr faultmask, r0"
 	);
+
+	// SVCall
+	__asm(
+			"svc 0"
+	);
+	// pending NMI and PendSV and call SVCall simultaneously
+	__asm(
+			"mov r0, 1\n"
+			"msr faultmask, r0"
+	);
+	SCB->ICSR |= SCB_ICSR_PENDSVSET | SCB_ICSR_NMIPENDSET;
+	__asm(
+			"svc 0"
+	);
+	__asm(
+			"nop\n"
+	);
+	__asm(
+			"mov r0, 0\n"
+			"msr faultmask, r0"
+	);
+	__asm(
+			"nop\n"
+	);
+
+
 
 	while(1)
 	{
