@@ -3,7 +3,7 @@
 .syntax unified
 .thumb
 
-.extern _main_stack_pointer_value
+.extern _main_stack_pointer
 
 .weak nmi_handler
 .thumb_set nmi_handler, default_handler
@@ -43,7 +43,7 @@
 
 
 .section .vector_table, "a"
-.word _main_stack_pointer_value  // 0
+.word _main_stack_pointer        // 0
 .word reset_handler              // 1
 .word nmi_handler                // 2
 .word hard_fault_handler         // 3
