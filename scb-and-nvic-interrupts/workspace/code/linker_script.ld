@@ -2,8 +2,8 @@ _main_stack_pointer = 0x20002800;
 
 MEMORY
 {
-	FLASH (rw) : ORIGIN(0x08000000), LENGTH = 32K
-	SRAM (rwx) : ORIGIN(0x20000000), LENGTH = 10K
+	FLASH(rw) : ORIGIN = 0x08000000, LENGTH = 32K
+	SRAM(rwx) : ORIGIN = 0x20000000, LENGTH = 10K
 }
 
 SECTIONS
@@ -33,7 +33,7 @@ SECTIONS
 		_vma_data_end = .;
 	} > SRAM AT> FLASH
 
-	_lma_data_start = LOADADDR(data);
+	_lma_data_start = LOADADDR(.data);
 
 	.bss :
 	{
