@@ -25,7 +25,8 @@ typedef struct
 
 } SCB_Register_Map;
 
-#define SCB ((SCB_Register_Map*)(0xE000E100))
+#define SCB ((SCB_Register_Map*)(0xE000ED00))
+
 
 
 #endif //_SCB_H_
