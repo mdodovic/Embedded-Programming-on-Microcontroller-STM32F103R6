@@ -113,7 +113,80 @@ int main()
 			"nop\n"
 	);
 
+	// IRQ0-IRQ3 interrupts
+	// enable IRQ0-IRQ3 interrupts
+	NVIC_ENABLE_IRQ(0);
+	NVIC_ENABLE_IRQ(1);
+	NVIC_ENABLE_IRQ(2);
+	NVIC_ENABLE_IRQ(3);
 
+	// pending IRQ0-IRQ3 interrupts
+	NVIC->ISPR[0] |= 0x0F; // 1111
+	__asm(
+			"nop\n"
+	);
+	// clear pending IRQ1 interrupt
+	NVIC->ICPR[0] |= 0x01; // 0001
+	__asm(
+			"nop\n"
+	);
+	NVIC->ISPR[0] |= 0x02; // 0010
+	__asm(
+			"nop\n"
+	);
+
+
+	// pending IRQ0-IRQ3 interrupts
+	NVIC->ISPR[0] |= 0x0F;
+	__asm(
+			"nop\n"
+	);
+	__asm__(
+			"mov r0, %[ispr_address]\n"
+			: [ispr_address] "=r" (NVIC->ISPR[0])
+	);
+	// clear pending for IRQ1 and IRQ3 interrupts
+	NVIC->ICPR[0] |= 0x0A; // 1010
+	__asm(
+			"nop\n"
+	);
+	__asm__(
+			"mov r0, %[address]\n"
+			: [address] "=r" (NVIC->ISPR[0])
+	);
+	// pending IRQ0 interrupt
+	NVIC->ISPR[0] |= 0x01;
+	__asm(
+			"nop\n"
+	);
+	__asm__(
+			"mov r0, %[address]\n"
+			: [address] "=r" (NVIC->ISPR[0])
+	);
+
+
+	// disable IRQ0 and IRQ2 interrupts
+	NVIC_DISABLE_IRQ(0);
+	NVIC_DISABLE_IRQ(2);
+
+	// pending IRQ0-IRQ3 interrupts
+	NVIC->ISPR[0] |= 0x0F;
+	__asm(
+			"nop\n"
+	);
+	// pending IRQ0 and IRQ2 interrupts
+	NVIC->ISPR[0] |= 0x05; // 0101
+	__asm(
+			"nop\n"
+	);
+
+	// enable IRQ0 and IRQ2 interrupts
+	NVIC_ENABLE_IRQ(0);
+	NVIC_ENABLE_IRQ(2);
+	__asm(
+			"nop\n"
+	);
+	NVIC->ISPR[0] |= 0x0F;
 
 	while(1)
 	{

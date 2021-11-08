@@ -26,6 +26,11 @@ typedef struct
 
 #define NVIC ((NVIC_Register_Map*)(0xE000E100))
 
+#define NVIC_ENABLE_IRQ(number) \
+	NVIC->ISER[(number) / 32] = 1 << ((number) % 32)
+
+#define NVIC_DISABLE_IRQ(number) \
+	NVIC->ICER[(number) / 32] = 1 << ((number) % 32)
 
 #endif //_NVIC_H_
 
