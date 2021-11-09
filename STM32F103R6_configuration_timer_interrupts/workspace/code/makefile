@@ -28,7 +28,7 @@ LINKER_SCRIPT = linker_script.ld
 AS = arm-none-eabi-gcc.exe -c -x assembler
 CC = arm-none-eabi-gcc.exe -c
 
-MCU = -cpu=cortex-m3 -mthumb
+MCU = -mcpu=cortex-m3 -mthumb
 
 DEBUG_FLAGS = -g -gdwarf-2 -fdebug-prefix-map==../
 
@@ -42,7 +42,7 @@ ifeq ($(DEBUG_OPTIONS), 1)
 CC_FLAGS += $(DEBUG_FLAGS)  
 endif
 CC_FLAGS += -MMD -MP
-CC_FLAGS += -call-mlong
+CC_FLAGS += -mlong-calls
 
 all: $(BUILD_DIR)/$(PROGRAM).elf $(BUILD_DIR)/$(PROGRAM).hex
 
