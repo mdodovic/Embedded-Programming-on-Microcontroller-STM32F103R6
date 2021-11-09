@@ -81,8 +81,8 @@ reset_handler:
 	beq no_more_data
 
 more_to_move:
-	ldr r3, [r0], 4
-	str r3, [r2], 4
+	ldr r3, [r2], 4
+	str r3, [r0], 4
 	cmp r0, r1 // if r0 < r1 move data
 	blo more_to_move
 
