@@ -17,7 +17,7 @@ INCLUDE_COMMAND = \
 
 OBJECT_FILE_LIST = 
 OBJECT_FILE_LIST += $(addprefix $(BUILD_DIR)/, $(notdir $(SOURCE_C_LIST:.c=.o)))
-OBJECT_FILE_LIST += $(addprefix $(BUILD_DIR)/, $(notdir $(SOURCE_S_LIST:.c=.o))) 
+OBJECT_FILE_LIST += $(addprefix $(BUILD_DIR)/, $(notdir $(SOURCE_S_LIST:.s=.o))) 
 
 vpath %.c $(sort $(dir $(SOURCE_C_LIST)))
 vpath %.s $(sort $(dir $(SOURCE_S_LIST)))
