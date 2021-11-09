@@ -16,11 +16,11 @@ INCLUDE_COMMAND = \
 
 
 OBJECT_FILE_LIST = 
-OBJECT_FILE_LIST += $(addprefix $(BUILD_DIR)/, $(notdir $(SORCE_C_LIST:.c:.o)))
-OBJECT_FILE_LIST += $(addprefix $(BUILD_DIR)/, $(notdir $(SORCE_S_LIST:.c:.o))) 
+OBJECT_FILE_LIST += $(addprefix $(BUILD_DIR)/, $(notdir $(SOURCE_C_LIST:.c=.o)))
+OBJECT_FILE_LIST += $(addprefix $(BUILD_DIR)/, $(notdir $(SOURCE_S_LIST:.c=.o))) 
 
-vpath %.c $(sort $(dir $(SORCE_C_LIST)))
-vpath %.s $(sort $(dir $(SORCE_S_LIST)))
+vpath %.c $(sort $(dir $(SOURCE_C_LIST)))
+vpath %.s $(sort $(dir $(SOURCE_S_LIST)))
 
 HX = arm-none-eabi-objcopy.exe
 LD = arm-none-eabi-ld.exe
