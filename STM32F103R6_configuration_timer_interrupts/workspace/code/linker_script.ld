@@ -28,9 +28,14 @@ SECTIONS
 
 	.data :
 	{
+		_vma_start_address = .;
 		*(.data)
 		*(.data*)
+		_vma_end_address = .;
 	} >SRAM AT>FLASH
+
+	_lma_start_address = LOADADDR(.data);
+
 
 	.bss :
 	{
