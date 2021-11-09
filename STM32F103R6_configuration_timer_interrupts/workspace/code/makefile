@@ -50,7 +50,7 @@ $(BUILD_DIR)/$(PROGRAM).hex: $(BUILD_DIR)/$(PROGRAM).elf
 	$(HX) $(BUILD_DIR)/$(PROGRAM).elf $(BUILD_DIR)/$(PROGRAM).hex
 
 $(BUILD_DIR)/$(PROGRAM).elf: $(OBJECT_FILE_LIST) makefile | $(BUILD_DIR)
-	$(LD) -T $(LINKER_SCRIPT) -o $(@) $(<)
+	$(LD) -T $(LINKER_SCRIPT) -o $(@) $(OBJECT_FILE_LIST) 
 
 $(BUILD_DIR)/%.o : %.c makefile | $(BUILD_DIR)
 	$(CC) $(CC_FLAGS) -o $(@) $(<)
