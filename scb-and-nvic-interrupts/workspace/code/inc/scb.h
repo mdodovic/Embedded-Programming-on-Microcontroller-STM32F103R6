@@ -2,6 +2,7 @@
 #define _SCB_H_
 
 #include <stdint.h>
+#include "utilities.h"
 
 typedef struct
 {
@@ -30,6 +31,8 @@ typedef struct
 #define SCB_ICSR_NMIPENDSET (1 << 31)
 #define SCB_ICSR_PENDSVSET (1 << 28)
 #define SCB_ICSR_PENDSVCLR (1 << 27)
+
+#define SCB_AIRCR_PRIGROUP(priority_group) SET_VALUE(SCB->AIRCR, 8, 10, (priority_group))
 
 #define SCB_CCR_DIV_0_TRP (1 << 4)
 #define SCB_CCR_UNALIGN_TRP (1 << 3)

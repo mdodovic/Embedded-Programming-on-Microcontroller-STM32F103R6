@@ -188,6 +188,44 @@ int main()
 	);
 	NVIC->ISPR[0] |= 0x0F;
 
+	// Prioriting
+	// set priority pattern to be gggg
+	SCB_AIRCR_PRIGROUP(3);
+	NVIC_SET_PRIORITY(0, 0x70); // 0111
+	NVIC_SET_PRIORITY(1, 0x60); // 0110
+	NVIC_SET_PRIORITY(2, 0x50); // 0101
+	NVIC_SET_PRIORITY(3, 0x40); // 0100
+
+	// pending IRQ0-IRQ3 interrupts (watch the order)
+	NVIC->ISPR[0] |= 0x0F;
+
+	// Set base priority - nobody will be executed
+	__asm__(
+			"mov r0, 0x30\n"
+			"msr basepri, r0"
+	);
+
+	// pending IRQ0-IRQ3 interrupts
+	NVIC->ISPR[0] |= 0x0F;
+
+	// Set base priority - nobody will be executed
+	__asm__(
+			"mov r0, 0x60\n"
+			"msr basepri, r0"
+	);
+	__asm(
+			"nop\n"
+	);
+	// pending IRQ0-IRQ3 interrupts
+	NVIC->ISPR[0] |= 0x0F;
+
+	// set priority pattern to be ggss
+	SCB_AIRCR_PRIGROUP(5);
+	// basepri is 60 = 01.10
+	// pending IRQ0-IRQ3 interrupts
+	NVIC->ISPR[0] |= 0x0F;
+
+
 	while(1)
 	{
 

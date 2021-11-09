@@ -32,6 +32,9 @@ typedef struct
 #define NVIC_DISABLE_IRQ(number) \
 	NVIC->ICER[(number) / 32] = 1 << ((number) % 32)
 
+#define NVIC_SET_PRIORITY(irq_number, priority) \
+		SET_VALUE(NVIC->IPR[(irq_number) / 4], 8 * ((irq_number) % 4), 8 * ((irq_number) % 4) + 7, (priority))
+
 #endif //_NVIC_H_
 
 
