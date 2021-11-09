@@ -226,6 +226,25 @@ int main()
 	NVIC->ISPR[0] |= 0x0F;
 
 
+	// Program mode privileged/user
+	// Set mode to user
+	__asm__(
+			"mov r0, 0x1\n"
+			"msr control, r0"
+	);
+	// Program mode to privileged - FAILED
+	__asm__(
+			"mov r0, 0x1\n"
+			"msr control, r0"
+	);
+
+	// call svc to change mode
+	__asm(
+			"svc 0\n"
+	);
+
+
+
 	while(1)
 	{
 

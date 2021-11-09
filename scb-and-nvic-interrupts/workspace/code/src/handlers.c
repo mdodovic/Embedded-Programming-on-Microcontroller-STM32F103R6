@@ -35,7 +35,11 @@ void usage_fault_handler()
 
 void svcall_handler()
 {
-	// Empty
+	__asm__(
+			"mov r0, 0x0\n"
+			"msr control, r0"
+	);
+
 }
 
 void pendsv_handler()
