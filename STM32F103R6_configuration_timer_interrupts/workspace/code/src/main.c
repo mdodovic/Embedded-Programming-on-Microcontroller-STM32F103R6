@@ -7,6 +7,10 @@ uint8_t const rodata[] = "VMA:FLASH, LMA:FLASH";
 uint8_t data[] = "VMA:RAM, LMA:FLASH";
 uint8_t bss;
 
+void systick_callback(){
+	bss++;
+}
+
 
 int main()
 {
@@ -33,6 +37,8 @@ int main()
 			"mov r7, %[SHPR3_register]\n"
 			: [SHPR3_register] "=r" (SCB->SHPR3)
 	);
+
+	systick_initialize();
 
 	while(1)
 	{
