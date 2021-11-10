@@ -8,3 +8,11 @@ This project shows basics configuration, that means the initialization of the mi
 
 ### ./scb-and-nvic-interrupts
 
+### ./STM32F103R6_configuration_timer_interrupts
+
+### ./STM32F103R6_dynamic_timer_interrupts
+
+
+
+
+
