@@ -41,6 +41,7 @@ CC_FLAGS = $(MCU)
 ifeq ($(DEBUG_OPTIONS), 1)
 CC_FLAGS += $(DEBUG_FLAGS)  
 endif
+CC_FLAGS += $(INCLUDE_COMMAND)
 CC_FLAGS += -MMD -MP
 CC_FLAGS += -mlong-calls
 
