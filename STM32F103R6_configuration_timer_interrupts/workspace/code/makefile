@@ -22,7 +22,7 @@ OBJECT_FILE_LIST += $(addprefix $(BUILD_DIR)/, $(notdir $(SOURCE_S_LIST:.s=.o)))
 vpath %.c $(sort $(dir $(SOURCE_C_LIST)))
 vpath %.s $(sort $(dir $(SOURCE_S_LIST)))
 
-HX = arm-none-eabi-objcopy.exe
+HX = arm-none-eabi-objcopy.exe --output-target ihex
 LD = arm-none-eabi-ld.exe
 LINKER_SCRIPT = linker_script.ld
 AS = arm-none-eabi-gcc.exe -c -x assembler
