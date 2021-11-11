@@ -8,6 +8,11 @@ uint8_t const rodata[] = "VMA:FLASH, LMA:FLASH";
 uint8_t data[] = "VMA:SRAM, LMA:FLASH";
 uint32_t bss;
 
+void systick_callback()
+{
+	bss++;
+}
+
 int main()
 {
 
@@ -18,6 +23,8 @@ int main()
 	SET_PEND_SV_PRIORITY(0xF0);
 
 	SCB->ICSR |= SCB_ICSR_PEND_PEND_SV;
+
+	systick_init();
 
 	while(1)
 	{

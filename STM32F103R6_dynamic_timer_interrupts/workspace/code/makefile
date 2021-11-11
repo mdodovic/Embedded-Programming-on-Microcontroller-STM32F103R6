@@ -4,8 +4,7 @@ DEBUG_OPTIONS = 1
 
 SOURCE_C_LIST = \
 src/handlers.c \
-src/main.c \
-src/systick.c
+src/main.c 
 
 SOURCE_S_LIST = \
 src/startup_code.s 
