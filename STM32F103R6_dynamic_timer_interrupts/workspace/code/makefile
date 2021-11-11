@@ -22,18 +22,19 @@ vpath %.s $(sort $(dir $(SOURCE_S_LIST)))
 
 HX = arm-none-eabi-objcopy.exe --output-target ihex
 LINKER_SCRIPT = linker_script.ld
-LD = arm-none-eabi-ld.exe -T $(LINKER_SCRIPT)
+LD = arm-none-eabi-ld.exe
 
 CC = arm-none-eabi-gcc.exe -c
 AS = arm-none-eabi-gcc.exe -c -x assembler
 
 MCU = -mcpu=cortex-m3 -mthumb
-DEBUG_FLAGS = -g -gdwarf-2 -fdebug-prefix-map==/..
+DEBUG_FLAGS = -g -gdwarf-2 -fdebug-prefix-map==../
 
 C_FLAGS = $(MCU)
 ifeq ($(DEBUG_OPTIONS),1)
 C_FLAGS += $(DEBUG_FLAGS)
 endif
+C_FLAGS += -MMD -MP
 C_FLAGS += $(INCLUDE_H_OPTION)
 C_FLAGS += -mlong-calls
 
@@ -50,7 +51,7 @@ $(BUILD_DIR)/$(PROGRAM).hex: $(BUILD_DIR)/$(PROGRAM).elf
 	$(HX) $(<) $(@)
 
 $(BUILD_DIR)/$(PROGRAM).elf: $(OBJECT_LIST)
-	$(LD) -o $(@) $(OBJECT_LIST)
+	$(LD) -T $(LINKER_SCRIPT) -o $(@) $(OBJECT_LIST)
 
 $(BUILD_DIR)/%.o: %.c makefile | $(BUILD_DIR)
 	$(CC) $(C_FLAGS) -o $(@) $(<)
