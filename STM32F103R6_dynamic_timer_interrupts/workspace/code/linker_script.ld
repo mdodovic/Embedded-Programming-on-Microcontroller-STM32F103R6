@@ -8,30 +8,30 @@ MEMORY
 
 SECTIONS
 {
-  .vector_table
+  .vector_table :
   {
 	*(.vector_table)
-  } >FLASH [AT>lma_region] [:phdr :phdr …] [=fillexp] [,]
+  } >FLASH
   
-  .text
+  .text :
   {
 	*(.text)
 	*(.text*)
   } >FLASH
 
-  .rodata
+  .rodata :
   {
 	*(.rodata)
 	*(.rodata*)
   } >FLASH
 
-  .data
+  .data :
   {
 	*(.data)
 	*(.data*)
   } >SRAM AT>FLASH
 
-  .bss
+  .bss :
   {
 	*(.bss)
 	*(.bss*)
