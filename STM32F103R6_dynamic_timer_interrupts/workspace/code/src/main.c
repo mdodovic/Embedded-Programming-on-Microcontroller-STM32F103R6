@@ -24,6 +24,17 @@ int main()
 
 	SCB->ICSR |= SCB_ICSR_PEND_PEND_SV;
 
+
+	NVIC_ENABLE_IRQ(0);
+	NVIC_ENABLE_IRQ(1);
+	NVIC_ENABLE_IRQ(2);
+								// xx.yy
+	NVIC_SET_PRIORITY_IRQ(0, 0x20); // 00.10
+	NVIC_SET_PRIORITY_IRQ(1, 0x00); // 00.00
+	NVIC_SET_PRIORITY_IRQ(2, 0x10); // 00.01
+
+	NVIC->ISPR[0] |= 0x7;
+
 	systick_init();
 
 	while(1)
