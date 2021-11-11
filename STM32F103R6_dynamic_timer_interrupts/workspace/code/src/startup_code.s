@@ -104,3 +104,5 @@ infinite_loop_reset_handler:
 default_handler:
 	infinite_loop_default_handler:
 		b infinite_loop_default_handler
+
+.end
