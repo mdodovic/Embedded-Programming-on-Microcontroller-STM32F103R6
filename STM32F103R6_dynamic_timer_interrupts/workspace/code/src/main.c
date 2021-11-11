@@ -2,7 +2,7 @@
 
 uint8_t const rodata[] = "VMA:FLASH, LMA: FLASH";
 uint8_t data[] = "VMA:SRAM, LMA: FLASH";
-uint8_t bss;
+uint32_t bss;
 
 int main()
 {
