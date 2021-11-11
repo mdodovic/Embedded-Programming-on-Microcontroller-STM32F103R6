@@ -1,12 +1,12 @@
 <?xml version='1.0' encoding='UTF-8' standalone='yes'?>
 <WORKSPACE>
  <FRAME activewindow="0">
-  <PLACEMENT>2c0000000200000003000000ffffffffffffffffffffffffffffffffc10100005d0000000906000018040000</PLACEMENT>
+  <PLACEMENT>2c00000002000000030000000083ffff0083ffffffffffffffffffffc10100005c0000000906000017040000</PLACEMENT>
   <WINDOW type="default" module="ISIS"/>
  </FRAME>
  <MODULE name="VSMDEBUG">
   <PWI>
-   <POPUP w="800" x="1120" flags="00000003" y="0" h="234" pid="0" iid="-1">
+   <POPUP w="800" x="1066" flags="00000003" y="56" h="234" pid="0" iid="-1">
     <PROPERTIES>
      <ITEM name="Message Column Width">542</ITEM>
      <ITEM name="ShowGrid">No</ITEM>
@@ -33,7 +33,7 @@
      <ITEM name="nItems">1</ITEM>
     </PROPERTIES>
    </POPUP>
-   <POPUP w="16" x="1904" flags="0000000b" y="0" h="32" pid="200" iid="1">
+   <POPUP w="16" x="621" flags="0000000b" y="552" h="32" pid="200" iid="1">
     <PROPERTIES>
      <ITEM name="DataType">2</ITEM>
      <ITEM name="DispChars">Yes</ITEM>
@@ -43,7 +43,7 @@
      <ITEM name="TopLineAddress">08000000</ITEM>
     </PROPERTIES>
    </POPUP>
-   <POPUP w="16" x="1904" flags="0000000b" y="302" h="32" pid="210" iid="1">
+   <POPUP w="16" x="471" flags="0000000b" y="415" h="32" pid="210" iid="1">
     <PROPERTIES>
      <ITEM name="DataType">2</ITEM>
      <ITEM name="DispChars">Yes</ITEM>
@@ -323,7 +323,7 @@
      <ITEM name="TopLineAddress">40006C00</ITEM>
     </PROPERTIES>
    </POPUP>
-   <POPUP w="16" x="1904" flags="0000000b" y="0" h="32" pid="510" iid="1">
+   <POPUP w="16" x="217" flags="0000000b" y="354" h="32" pid="510" iid="1">
     <PROPERTIES>
      <ITEM name="DataType">2</ITEM>
      <ITEM name="DispChars">Yes</ITEM>
@@ -335,7 +335,11 @@
    </POPUP>
    <POPUP w="725" x="1097" flags="0000802b" y="296" h="453" pid="100" iid="1">
     <PROPERTIES>
-     <ITEM name="Breakpoint 0">"main",8000056,0005,E696,66EA,1
+     <ITEM name="Breakpoint 0">"main",80000A6,0005,E696,66EA,1
+</ITEM>
+     <ITEM name="Breakpoint 1">"main",80000A6,0005,C767,66EA,1
+</ITEM>
+     <ITEM name="Breakpoint 2">"main",80000A6,0005,C767,66EA,1
 </ITEM>
      <ITEM name="CaseSensitive">No</ITEM>
      <ITEM name="DISPADDRS">Yes</ITEM>
@@ -343,7 +347,7 @@
      <ITEM name="DISPOPCODES">No</ITEM>
      <ITEM name="FIXUPBPTS">Yes</ITEM>
      <ITEM name="WordsOnly">No</ITEM>
-     <ITEM name="nBreakpoints">1</ITEM>
+     <ITEM name="nBreakpoints">3</ITEM>
     </PROPERTIES>
    </POPUP>
    <POPUP w="300" x="775" flags="0000000b" y="45" h="300" pid="101" iid="1">
@@ -363,7 +367,7 @@
      <ITEM name="nItems">0</ITEM>
     </PROPERTIES>
    </POPUP>
-   <POPUP w="226" x="1890" flags="00000009" y="57" h="182" pid="102" iid="1">
+   <POPUP w="226" x="438" flags="00000009" y="550" h="182" pid="102" iid="1">
     <PROPERTIES/>
    </POPUP>
    <POPUP w="170" x="1898" flags="00000008" y="596" h="237" pid="191" iid="1">
