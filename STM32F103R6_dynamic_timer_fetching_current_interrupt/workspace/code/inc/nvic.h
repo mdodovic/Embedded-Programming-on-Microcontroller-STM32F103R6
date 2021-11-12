@@ -26,6 +26,12 @@ typedef struct
 
 #define NVIC ((NVIC_Register_Map*)(0xE000E100))
 
+#define NVIC_ENABLE_IRQ(number) \
+	NVIC->ISER[number / 32] = 1 << (number % 32)
+
+#define NVIC_SET_PRIORITY(irq_number, priority) \
+	SET_VALUE(NVIC->IPR[irq_number / 4], (irq_number % 4) * 8, (irq_number % 4) * 8 + 7, priority)
+
 #endif //_NVIC_H_
 
 

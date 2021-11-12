@@ -28,6 +28,9 @@ typedef struct
 
 #define SCB ((SCB_Register_Map*)(0xE000ED00))
 
+#define SET_PRIORITY_PATTERN(prigroup) \
+	SET_VALUE(SCB->AIRCR, 8, 10, prigroup)
+
 #endif //_SCB_H_
 
 
