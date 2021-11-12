@@ -24,7 +24,7 @@ typedef struct
 
 } NVIC_Register_Map;
 
-// #define NVIC ((NVIC_Register_Map*)(/* enter the address*/))
+#define NVIC ((NVIC_Register_Map*)(0xE000E100))
 
 #endif //_NVIC_H_
 
