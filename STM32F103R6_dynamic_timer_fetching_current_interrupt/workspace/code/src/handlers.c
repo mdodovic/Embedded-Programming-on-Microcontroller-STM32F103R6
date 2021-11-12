@@ -1,7 +1,8 @@
 #include <stdint.h>
 #include "utility.h"
 #include "systick.h"
-
+#include "scb.h"
+#include "nvic.h"
 void __attribute__((weak)) systick_callback()
 {
 	// Empty
@@ -52,3 +53,26 @@ void irq2_tamper_handler()
 {
 	// Empty
 }
+
+extern uint32_t current_interrupt;
+
+uint32_t number_of_current_interrupt()
+{
+	asm (
+		"mrs %0, ipsr"
+	    : "=r" (current_interrupt)
+	);
+	return current_interrupt & 0x1FF;
+
+}
+
+void pendsv_handler()
+{
+	current_interrupt = number_of_current_interrupt();
+}
+
+void svcall_handler()
+{
+	current_interrupt = number_of_current_interrupt();
+}
+

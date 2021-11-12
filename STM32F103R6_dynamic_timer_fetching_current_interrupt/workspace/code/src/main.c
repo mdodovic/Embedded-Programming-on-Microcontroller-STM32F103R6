@@ -14,10 +14,12 @@ void systick_callback()
 	bss++;
 }
 
+extern uint32_t number_of_current_interrupt();
+
+uint32_t current_interrupt = 0;
 
 int main()
 {
-
 	SET_PRIORITY_PATTERN(0x5); // xx.yy
 
 	NVIC_ENABLE_IRQ(0);
@@ -36,6 +38,16 @@ int main()
 
 	NVIC->ISPR[0] |= 0x7;
 
+	SCB_SET_SYSTICK_PRIORITY(0x00);
+	SCB_SET_PENDSV_PRIORITY(0x10); // 00.01
+	SCB_SET_SVCALL_PRIORITY(0x20);
+
+	SCB->ICSR |= SCB_ICSR_PENDSVSET;
+	__asm__(
+		"svc 0"
+	);
+
+	current_interrupt = number_of_current_interrupt();
 
 	bss = 0;
 

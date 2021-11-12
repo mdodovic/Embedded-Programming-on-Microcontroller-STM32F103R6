@@ -31,6 +31,20 @@ typedef struct
 #define SET_PRIORITY_PATTERN(prigroup) \
 	SET_VALUE(SCB->AIRCR, 8, 10, prigroup)
 
+#define SCB_SET_SYSTICK_PRIORITY(priority) \
+	SET_VALUE(SCB->SHPR3, 24, 31, priority)
+
+#define SCB_SET_PENDSV_PRIORITY(priority) \
+	SET_VALUE(SCB->SHPR3, 16, 23, priority)
+
+#define SCB_SET_SVCALL_PRIORITY(priority) \
+	SET_VALUE(SCB->SHPR2, 24, 31, priority)
+
+
+#define SCB_ICSR_NMIPENDSET (1 << 31)
+#define SCB_ICSR_PENDSVSET  (1 << 28)
+
+
 #endif //_SCB_H_
 
 
