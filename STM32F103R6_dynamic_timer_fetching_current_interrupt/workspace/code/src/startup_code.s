@@ -83,7 +83,7 @@ reset_handler:
 	ldr r2, =_lma_start_address
 
 	cmp r0, r1 // if r0 < r1
-	bne no_data_in_lma
+	beq no_data_in_lma
 
 more_data_in_lma:
 	ldr r3, [r2], 4
