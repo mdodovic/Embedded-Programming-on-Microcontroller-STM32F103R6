@@ -53,7 +53,23 @@ instruction_test:
 	mov r1, 17
 	mov r2, 5
 
+	sub r1, r2
+	sub r0, r1, r2
 
+	mov r1, 9
+	mov r2, 5
+	sub r0, r1, r2, LSL 1
+	sub r0, r1, r2, LSR 1
+	subs r0, r1, r2, LSL 1
+	sub r0, r1, 9
+
+	mov r3, 0xF0000000
+	mov r4, 2
+
+	lsl r0, r3, 4
+	lsls r0, r3, 4
+	lsl r0, r3, r4
+	lsls r0, r3, r4
 
 
 	pop {r0-r5, lr}
