@@ -11,5 +11,13 @@ typedef struct{
 
 } STK_Register_Map;
 
+#define STK ((STK_Register_Map*)(0xE000E010))
+
+#define STK_CTRL_ENABLE (1 << 0)
+#define STK_CTRL_TICKINT (1 << 1)
+#define STK_CTRL_CLKSOURCE (1 << 2)
+
+extern void systick_init();
+extern void systick_callback();
 
 #endif // _SYSTICK_H_

@@ -19,6 +19,8 @@ int main()
 
 	bss = 0;
 
+	systick_init();
+
 	while(1)
 	{
 
