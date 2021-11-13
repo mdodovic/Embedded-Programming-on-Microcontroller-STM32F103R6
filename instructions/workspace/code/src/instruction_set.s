@@ -80,6 +80,16 @@ instruction_test:
 	subsne r2, r3, r0
 	movne r3,2
 
+	mov r1, -4
+	mov r0, 7
+	cmp r1, r0
+
+	itete eq
+	addeq r0,r0,1
+	addsne r1,4
+	subeq r0,r0,1
+	subne r0,r0,1
+
 
 	pop {r0-r5, lr}
 	bx lr
