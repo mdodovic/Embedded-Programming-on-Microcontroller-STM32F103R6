@@ -77,9 +77,9 @@
 .section .text.reset_handler
 .type reset_handler, %function
 reset_handler:
-	ldr r0, =vma_start_value
-	ldr r1, =vma_end_value
-	ldr r2, =lma_start_value
+	ldr r0, =_vma_start_value
+	ldr r1, =_vma_end_value
+	ldr r2, =_lma_start_value
 
 	cmp r0, r1 // if r0 == r1: no .data
 	beq no_more_data_in_lma
