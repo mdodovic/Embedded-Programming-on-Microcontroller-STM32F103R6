@@ -47,8 +47,6 @@ int main()
 
 	current_exception = number_of_current_exception();
 
-
-
 	systick_init();
 
 	while(1)

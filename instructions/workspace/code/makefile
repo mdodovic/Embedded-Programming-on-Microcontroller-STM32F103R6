@@ -8,7 +8,10 @@ src/main.c
 
 
 SOURCE_S_LIST = \
-src/startup_code.s
+src/startup_code.s \
+src/instruction_set.s
+
+
 
 INCLUDE_H_FLAG = \
 -Iinc

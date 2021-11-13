@@ -92,6 +92,7 @@ more_data_in_lma:
 	blo more_data_in_lma
 
 no_more_data_in_lma:
+	bl instruction_test
 	b main
 	infinite_loop_reset_handler:
 		b infinite_loop_reset_handler
