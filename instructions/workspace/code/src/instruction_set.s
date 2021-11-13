@@ -12,7 +12,33 @@ instruction_test:
 
 	push {r0-r5, lr}
 
+	adr r0, data1
+	ldr r1, [r0]
 
+	add r0, r0, 4
+
+	ldrb r2, [r0, 1]
+	ldrh r2, [r0, 1]
+	ldr r2, [r0, 1]
+
+	adr r0, data1
+	ldrb r3, [r0, 1]!
+	adr r0, data1
+	ldrh r3, [r0, 1]!
+	adr r0, data1
+	ldr r3, [r0, 1]!
+
+	adr r0, data1
+	ldrb r4, [r0], 1
+	adr r0, data1
+	ldrh r4, [r0], 1
+	adr r0, data1
+	ldr r4, [r0], 1
+
+
+
+	ldr r0, =data1
+	ldr r1, [r0]
 
 	pop {r0-r5, lr}
 	bx lr
