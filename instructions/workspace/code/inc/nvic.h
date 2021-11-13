@@ -24,7 +24,13 @@ typedef struct
 
 } NVIC_Register_Map;
 
+#define NVIC ((NVIC_Register_Map*)(0xE000E100))
 
+#define NVIC_ENABLE_IRQ(irq_number)\
+	NVIC->ISER[irq_number / 32] |= 1 << (irq_number % 32)
+
+#define NVIC_SET_PRIORITY(irq_number, value)\
+	SET_VALUE(NVIC->IPR[irq_number / 4], (irq_number % 4) * 8, (irq_number % 4) * 8 + 7, value)
 
 #endif //_NVIC_H_
 

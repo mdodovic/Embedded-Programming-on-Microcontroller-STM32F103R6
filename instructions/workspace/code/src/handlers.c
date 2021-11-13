@@ -29,3 +29,36 @@ void systick_handler()
 }
 
 
+void irq0_wwgd_handler()
+{
+
+}
+void irq1_pvd_handler()
+{
+
+}
+void irq2_tamper_handler()
+{
+
+}
+
+extern uint32_t current_exception;
+
+uint32_t number_of_current_exception()
+{
+	uint32_t current;
+	__asm__(
+		"mrs %0, ipsr"
+		: "=r" (current)
+	);
+	return current & 0x1ff;
+}
+
+void svcall_handler()
+{
+	current_exception = number_of_current_exception();
+}
+void pendsv_handler()
+{
+	current_exception = number_of_current_exception();
+}

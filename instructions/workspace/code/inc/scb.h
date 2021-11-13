@@ -15,7 +15,7 @@ typedef struct
 	uint32_t SHPR1;
 	uint32_t SHPR2;
 	uint32_t SHPR3;
-	uint32_t SHCRS;
+	uint32_t SHCSR;
 	uint32_t CFSR;
 	uint32_t HFSR;
 
@@ -26,6 +26,13 @@ typedef struct
 
 } SCB_Register_Map;
 
+#define SCB ((SCB_Register_Map*)(0xE000ED00))
+
+#define SCB_AIRCR_SET_PATTERN(priority_pattern) \
+	SET_VALUE(SCB->AIRCR, 8, 10, priority_pattern)
+
+#define SCB_ICSR_PENDSV_SET (1 << 28)
+#define SCB_SHCSR_SVCALLPENDED (1 << 15)
 
 
 #endif //_SCB_H_
