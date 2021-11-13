@@ -35,10 +35,26 @@ instruction_test:
 	adr r0, data1
 	ldr r4, [r0], 1
 
-
-
 	ldr r0, =data1
 	ldr r1, [r0]
+
+	ldr r0, =data1
+
+	ldm r0, {r1-r4}
+	ldm r0, {r1, r2, r3, r4}
+	ldmia r0, {r1, r2, r3, r4}
+	ldmia r0!, {r1-r4}
+	ldmdb r0!, {r1-r4}
+
+	mov r0, 0xFF00FF00
+	mov r0, 0x1234
+	movt r0, 0x5678
+
+	mov r1, 17
+	mov r2, 5
+
+
+
 
 	pop {r0-r5, lr}
 	bx lr
