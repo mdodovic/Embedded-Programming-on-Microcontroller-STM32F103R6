@@ -71,6 +71,15 @@ instruction_test:
 	lsl r0, r3, r4
 	lsls r0, r3, r4
 
+	mov r3, 13
+	cmp r1, 13
+
+	itett ne
+	movne r0,13
+	moveq r2,3
+	subsne r2, r3, r0
+	movne r3,2
+
 
 	pop {r0-r5, lr}
 	bx lr
