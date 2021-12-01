@@ -216,5 +216,20 @@ void TIM1_UP_IRQHandler(void)
 
 /* USER CODE BEGIN 1 */
 
+void WWDG_IRQHandler(void)
+{
+
+}
+
+void PVD_IRQHandler(void)
+{
+
+}
+
+void TAMPER_IRQHandler(void)
+{
+
+}
+
 /* USER CODE END 1 */
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
