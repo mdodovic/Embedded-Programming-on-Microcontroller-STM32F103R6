@@ -53,7 +53,7 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+uint32_t volatile sysClk = 0;
 /* USER CODE END 0 */
 
 /**
@@ -62,7 +62,7 @@ void SystemClock_Config(void);
  */
 int main(void) {
 	/* USER CODE BEGIN 1 */
-
+	sysClk = SystemCoreClock;
 	/* USER CODE END 1 */
 
 	/* MCU Configuration--------------------------------------------------------*/
@@ -71,6 +71,7 @@ int main(void) {
 	HAL_Init();
 
 	/* USER CODE BEGIN Init */
+	sysClk = SystemCoreClock;
 
 	/* USER CODE END Init */
 
@@ -78,6 +79,7 @@ int main(void) {
 	SystemClock_Config();
 
 	/* USER CODE BEGIN SysInit */
+	sysClk = SystemCoreClock;
 
 	/* USER CODE END SysInit */
 
@@ -98,6 +100,9 @@ int main(void) {
 	NVIC_EnableIRQ(TAMPER_IRQn);
 
 	NVIC->ISPR[0] |= 0b111;
+
+	sysClk = SystemCoreClock;
+	SysTick_Config(sysClk/2);
 
 	/* USER CODE END 2 */
 
