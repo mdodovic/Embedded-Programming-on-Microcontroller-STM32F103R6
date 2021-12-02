@@ -104,6 +104,8 @@ int main(void) {
 	sysClk = SystemCoreClock;
 	SysTick_Config(sysClk / 2);
 
+	NVIC_SetPriority(SysTick_IRQn, NVIC_EncodePriority(priorityGroup, 0, 0));
+
 	/* USER CODE END 2 */
 
 	/* Infinite loop */
