@@ -35,3 +35,9 @@ void casovnik()
 	HAL_TIM_Base_Start_IT(casovnik_tim_handle);
 
 }
+
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+	HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_1);
+}
