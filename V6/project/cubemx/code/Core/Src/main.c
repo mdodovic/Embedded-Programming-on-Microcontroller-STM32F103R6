@@ -90,6 +90,19 @@ int main(void) {
 
 	HAL_TIM_Base_Start(&htim1);
 
+	for(;;)
+	{
+
+		while((htim1.Instance->SR & TIM_SR_UIF) == 0)
+		{
+			// busy wait
+		}
+
+		htim1.Instance->SR = ~TIM_SR_UIF;
+
+		HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_0);
+
+	}
 	/* USER CODE END 2 */
 
 	/* Infinite loop */
