@@ -37,8 +37,17 @@ void casovnik()
 
 }
 
+uint32_t counter = 0;
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-	HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_1);
+
+	if(htim->Instance == casovnik_tim_handle->Instance)
+	{
+		HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_1);
+		if(++counter == 5)
+		{
+			HAL_TIM_Base_Stop_IT(casovnik_tim_handle);
+		}
+	}
 }
