@@ -21,6 +21,7 @@
 #include "main.h"
 #include "tim.h"
 #include "gpio.h"
+#include "casovnik.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -88,21 +89,9 @@ int main(void) {
 	MX_TIM1_Init();
 	/* USER CODE BEGIN 2 */
 
-	HAL_TIM_Base_Start(&htim1);
+	casovnik();
 
-//	for(;;)
-//	{
-//
-//		while((htim1.Instance->SR & TIM_SR_UIF) == 0)
-//		{
-//			// busy wait
-//		}
-//
-//		htim1.Instance->SR = ~TIM_SR_UIF;
-//
-//		HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_0);
-//
-//	}
+
 	/* USER CODE END 2 */
 
 	/* Infinite loop */
