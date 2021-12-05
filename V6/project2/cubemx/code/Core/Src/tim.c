@@ -103,6 +103,8 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* tim_baseHandle)
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
     /* TIM1 interrupt Init */
+    HAL_NVIC_SetPriority(TIM1_UP_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ(TIM1_UP_IRQn);
     HAL_NVIC_SetPriority(TIM1_CC_IRQn, 0, 0);
     HAL_NVIC_EnableIRQ(TIM1_CC_IRQn);
   /* USER CODE BEGIN TIM1_MspInit 1 */
@@ -128,6 +130,7 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* tim_baseHandle)
     HAL_GPIO_DeInit(GPIOA, GPIO_PIN_8);
 
     /* TIM1 interrupt Deinit */
+    HAL_NVIC_DisableIRQ(TIM1_UP_IRQn);
     HAL_NVIC_DisableIRQ(TIM1_CC_IRQn);
   /* USER CODE BEGIN TIM1_MspDeInit 1 */
 
@@ -138,6 +141,7 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* tim_baseHandle)
 /* USER CODE BEGIN 1 */
 
 #define FREQUENCY_CNT_CLK 8000
+#define ARR 65535
 
 typedef enum
 {
@@ -153,6 +157,15 @@ uint32_t volatile ticksElapsedPeriod = 0;
 
 uint32_t volatile frequency = 0;
 
+
+
+uint32_t volatile overflowCounter = 0;
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+	++overflowCounter;
+}
+
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
 {
 	switch (state) {
@@ -160,6 +173,7 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
 			if(htim->Instance == TIM1 && htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1)
 			{
 				timeStampStart = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_1);
+				overflowCounter = 0;
 				state = WAIT_PERIOD_END;
 			}
 			break;
@@ -167,11 +181,12 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
 			if(htim->Instance == TIM1 && htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1)
 			{
 				timeStampEnd = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_1);
-				ticksElapsedPeriod = timeStampEnd - timeStampStart;
+				ticksElapsedPeriod = (timeStampEnd + overflowCounter * (ARR + 1)) - timeStampStart;
 
 				frequency = FREQUENCY_CNT_CLK / ticksElapsedPeriod;
 
 				timeStampStart = timeStampEnd;
+				overflowCounter = 0;
 				state = WAIT_PERIOD_END;
 			}
 			break;

@@ -89,7 +89,10 @@ int main(void)
 	MX_TIM1_Init();
 	/* USER CODE BEGIN 2 */
 
+	htim1.Instance->SR = ~TIM_SR_UIF;
+
 	HAL_TIM_IC_Start_IT(&htim1, TIM_CHANNEL_1);
+	HAL_TIM_Base_Start_IT(&htim1);
 
 	/* USER CODE END 2 */
 
