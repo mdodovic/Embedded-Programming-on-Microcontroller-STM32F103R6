@@ -75,6 +75,11 @@ void MX_TIM1_Init(void)
   {
     Error_Handler();
   }
+  sConfigIC.ICPolarity = TIM_INPUTCHANNELPOLARITY_FALLING;
+  if (HAL_TIM_IC_ConfigChannel(&htim1, &sConfigIC, TIM_CHANNEL_2) != HAL_OK)
+  {
+    Error_Handler();
+  }
   /* USER CODE BEGIN TIM1_Init 2 */
 
   /* USER CODE END TIM1_Init 2 */
@@ -96,8 +101,9 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* tim_baseHandle)
     __HAL_RCC_GPIOA_CLK_ENABLE();
     /**TIM1 GPIO Configuration
     PA8     ------> TIM1_CH1
+    PA9     ------> TIM1_CH2
     */
-    GPIO_InitStruct.Pin = GPIO_PIN_8;
+    GPIO_InitStruct.Pin = GPIO_PIN_8|GPIO_PIN_9;
     GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
@@ -126,8 +132,9 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* tim_baseHandle)
 
     /**TIM1 GPIO Configuration
     PA8     ------> TIM1_CH1
+    PA9     ------> TIM1_CH2
     */
-    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_8);
+    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_8|GPIO_PIN_9);
 
     /* TIM1 interrupt Deinit */
     HAL_NVIC_DisableIRQ(TIM1_UP_IRQn);
@@ -145,19 +152,21 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* tim_baseHandle)
 
 typedef enum
 {
-	WAIT_INITIAL_RISING_EDGE, WAIT_PERIOD_END
+	WAIT_INITIAL_RISING_EDGE, WAIT_FALLING_EDGE, WAIT_PERIOD_END
 } PeriodStateMachine;
 
 PeriodStateMachine state = WAIT_INITIAL_RISING_EDGE;
 
 uint16_t volatile timeStampStart = 0;
+uint16_t volatile timeStampFall = 0;
 uint16_t volatile timeStampEnd = 0;
 
+uint32_t volatile ticksElapsedActive = 0;
 uint32_t volatile ticksElapsedPeriod = 0;
 
 uint32_t volatile frequency = 0;
 
-
+uint32_t volatile dutyCycle = 0;
 
 uint32_t volatile overflowCounter = 0;
 
@@ -174,6 +183,15 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
 			{
 				timeStampStart = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_1);
 				overflowCounter = 0;
+				state = WAIT_FALLING_EDGE;
+			}
+			break;
+		case WAIT_FALLING_EDGE:
+			if(htim->Instance == TIM1 && htim->Channel == HAL_TIM_ACTIVE_CHANNEL_2)
+			{
+				timeStampFall = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_2);
+				ticksElapsedActive = (timeStampFall + overflowCounter * (ARR + 1)) - timeStampStart;
+
 				state = WAIT_PERIOD_END;
 			}
 			break;
@@ -184,6 +202,8 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
 				ticksElapsedPeriod = (timeStampEnd + overflowCounter * (ARR + 1)) - timeStampStart;
 
 				frequency = FREQUENCY_CNT_CLK / ticksElapsedPeriod;
+
+				dutyCycle = (100 * ticksElapsedActive) / ticksElapsedPeriod;
 
 				timeStampStart = timeStampEnd;
 				overflowCounter = 0;
