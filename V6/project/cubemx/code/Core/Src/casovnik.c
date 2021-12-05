@@ -88,9 +88,11 @@ void casovnik()
 
 	//HAL_TIM_RegisterCallback(casovnik_tim_handle, HAL_TIM_PERIOD_ELAPSED_CB_ID, &casovnik_TIM_odbrojao);
 
+	GPIOC->ODR = seven_seg[1];
+
+
 	HAL_TIM_Base_Start_IT(casovnik_tim_handle);
 
-	GPIOC->ODR = seven_seg[1];
 
 
 }
