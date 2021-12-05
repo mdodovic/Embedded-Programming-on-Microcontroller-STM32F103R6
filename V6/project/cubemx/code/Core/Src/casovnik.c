@@ -67,29 +67,31 @@ uint32_t counter = 0;
 void casovnik()
 {
 
-	HAL_TIM_Base_Start(casovnik_tim_handle);
+//	HAL_TIM_Base_Start(casovnik_tim_handle);
 
-	GPIOC->ODR = seven_seg[1];
 
-	for(int i = 0; i < 5; i ++)
-	{
+//	for(int i = 0; i < 5; i ++)
+//	{
+//
+//		while((casovnik_tim_handle->Instance->SR & TIM_SR_UIF) == 0)
+//		{
+//			// busy wait
+//		}
+//
+//		casovnik_tim_handle->Instance->SR = ~TIM_SR_UIF;
+//
+//		HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_0);
+//
+//	}
 
-		while((casovnik_tim_handle->Instance->SR & TIM_SR_UIF) == 0)
-		{
-			// busy wait
-		}
-
-		casovnik_tim_handle->Instance->SR = ~TIM_SR_UIF;
-
-		HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_0);
-
-	}
-
-	HAL_TIM_Base_Stop(casovnik_tim_handle);
+//	HAL_TIM_Base_Stop(casovnik_tim_handle);
 
 	//HAL_TIM_RegisterCallback(casovnik_tim_handle, HAL_TIM_PERIOD_ELAPSED_CB_ID, &casovnik_TIM_odbrojao);
 
 	HAL_TIM_Base_Start_IT(casovnik_tim_handle);
+
+	GPIOC->ODR = seven_seg[1];
+
 
 }
 
