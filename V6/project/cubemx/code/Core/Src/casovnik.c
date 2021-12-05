@@ -97,17 +97,50 @@ void casovnik()
 
 }
 
+uint32_t sekunde = 0;
+uint32_t minuti = 0;
+
+uint32_t tekuca_cifra = 0;
+uint32_t cifre[4] = {0, 0, 0, 0};
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-
 	if(htim->Instance == casovnik_tim_handle->Instance)
 	{
-		HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_1);
-		if(++counter == 5)
+		if(++counter == 100)
 		{
-			HAL_TIM_Base_Stop_IT(casovnik_tim_handle);
+			counter = 0;
+
+			if(++sekunde == 5)
+			{
+				sekunde = 0;
+
+				if(++minuti == 3)
+				{
+					minuti = 0;
+				}
+			}
+
+			cifre[0] = minuti / 10;
+			cifre[1] = minuti % 10;
+			cifre[2] = sekunde / 10;
+			cifre[3] = sekunde % 10;
+
 		}
+
+
+
+		tekuca_cifra = (tekuca_cifra + 1) % 4;
+
+
+		GPIOC->ODR &= ~0xF00;
+
+		GPIOC->ODR &= ~0xFF;
+
+		GPIOC->ODR |= seven_seg[cifre[tekuca_cifra]];
+
+		GPIOC->ODR |= (0x1 << (8 + tekuca_cifra));
+
 	}
 }
 
