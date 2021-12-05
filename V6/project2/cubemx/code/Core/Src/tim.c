@@ -137,6 +137,46 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* tim_baseHandle)
 
 /* USER CODE BEGIN 1 */
 
+#define FREQUENCY_CNT_CLK 8000
+
+typedef enum
+{
+	WAIT_INITIAL_RISING_EDGE, WAIT_PERIOD_END
+} PeriodStateMachine;
+
+PeriodStateMachine state = WAIT_INITIAL_RISING_EDGE;
+
+uint16_t volatile timeStampStart = 0;
+uint16_t volatile timeStampEnd = 0;
+
+uint32_t volatile ticksElapsedPeriod = 0;
+
+uint32_t volatile frequency = 0;
+
+void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
+{
+	switch (state) {
+		case WAIT_INITIAL_RISING_EDGE:
+			if(htim->Instance == TIM1 && htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1)
+			{
+				timeStampStart = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_1);
+				state = WAIT_PERIOD_END;
+			}
+			break;
+		case WAIT_PERIOD_END:
+			if(htim->Instance == TIM1 && htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1)
+			{
+				timeStampEnd = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_1);
+				ticksElapsedPeriod = timeStampEnd - timeStampStart;
+
+				frequency = FREQUENCY_CNT_CLK / ticksElapsedPeriod;
+
+				timeStampStart = timeStampEnd;
+				state = WAIT_PERIOD_END;
+			}
+			break;
+	}
+}
 /* USER CODE END 1 */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
