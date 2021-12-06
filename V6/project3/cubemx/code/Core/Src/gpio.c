@@ -21,7 +21,7 @@
 #include "gpio.h"
 
 /* USER CODE BEGIN 0 */
-
+#include "tim.h"
 /* USER CODE END 0 */
 
 /*----------------------------------------------------------------------------*/
@@ -58,6 +58,34 @@ void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 2 */
+
+#define ARR 9
+#define STEP 10
+#define INCREMENT ((ARR + 1) / STEP)
+uint32_t volatile compareRegisterValue = 0;
+
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+	switch (GPIO_Pin) {
+		case GPIO_PIN_0:
+			// BTN1 - speed up
+			if(compareRegisterValue < ARR + 1)
+			{
+				compareRegisterValue += INCREMENT;
+			}
+			htim1.Instance->CCR1 = compareRegisterValue;
+			break;
+		case GPIO_PIN_1:
+			// BTN2 - speed down
+
+			if(compareRegisterValue > 0)
+			{
+				compareRegisterValue -= INCREMENT;
+			}
+			htim1.Instance->CCR1 = compareRegisterValue;
+			break;
+	}
+}
 
 /* USER CODE END 2 */
 
