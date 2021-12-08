@@ -77,6 +77,11 @@ void setGPIOB(uint16_t GPIO_PIN, GPIO_PinState GPIO_PIN_STATE)
 	}
 }
 
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+	HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_12);
+}
+
 /* USER CODE END 2 */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
