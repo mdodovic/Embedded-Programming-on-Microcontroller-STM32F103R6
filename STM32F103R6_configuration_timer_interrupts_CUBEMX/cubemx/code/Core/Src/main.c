@@ -99,7 +99,7 @@ int main(void) {
 
 	NVIC->ISPR[0] |= 0b111;
 
-	SysTick_Config(ticks);
+	SysTick_Config(SystemCoreClock / 2);
 
 	/* USER CODE END 2 */
 
