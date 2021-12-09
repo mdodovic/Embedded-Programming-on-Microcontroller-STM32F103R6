@@ -19,11 +19,12 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "tim.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "clock.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -85,6 +86,7 @@ int main(void)
 
 	/* Initialize all configured peripherals */
 	MX_GPIO_Init();
+	MX_TIM1_Init();
 	/* USER CODE BEGIN 2 */
 	setGPIOB(GPIO_PIN_11, GPIO_PIN_SET);
 	setGPIOB(GPIO_PIN_12, GPIO_PIN_SET);
@@ -93,6 +95,9 @@ int main(void)
 	setGPIOB(GPIO_PIN_15, GPIO_PIN_SET);
 	setGPIOB(GPIO_PIN_13, GPIO_PIN_RESET);
 	setGPIOB(GPIO_PIN_14, GPIO_PIN_RESET);
+
+	clock_init();
+
 	/* USER CODE END 2 */
 
 	/* Infinite loop */
