@@ -59,6 +59,7 @@ uint8_t current_digit = 0;
 volatile uint8_t seven_segment_digits[4] =
 { 0, 0, 0, 0};
 
+uint32_t show_stopwatch_invert = 0;
 
 uint32_t tim1_update_event_ticks = 0;
 uint32_t seconds = 0;
@@ -86,11 +87,13 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 				}
 			}
 
-			seven_segment_digits[0] = minutes / 10;
-			seven_segment_digits[1] = minutes % 10;
-			seven_segment_digits[2] = seconds / 10;
-			seven_segment_digits[3] = seconds % 10;
-
+			if(show_stopwatch_invert == 0)
+			{
+				seven_segment_digits[0] = minutes / 10;
+				seven_segment_digits[1] = minutes % 10;
+				seven_segment_digits[2] = seconds / 10;
+				seven_segment_digits[3] = seconds % 10;
+			}
 		}
 
 

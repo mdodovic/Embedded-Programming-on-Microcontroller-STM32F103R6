@@ -21,7 +21,7 @@
 #include "gpio.h"
 
 /* USER CODE BEGIN 0 */
-
+#include "clock.h"
 /* USER CODE END 0 */
 
 /*----------------------------------------------------------------------------*/
@@ -61,9 +61,15 @@ void MX_GPIO_Init(void)
 			| GPIO_PIN_4 | GPIO_PIN_5 | GPIO_PIN_6 | GPIO_PIN_7 | GPIO_PIN_8
 			| GPIO_PIN_9 | GPIO_PIN_10 | GPIO_PIN_11;
 	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-	GPIO_InitStruct.Pull = GPIO_PULLUP;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
 	HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+	/*Configure GPIO pin : PB10 */
+	GPIO_InitStruct.Pin = GPIO_PIN_10;
+	GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
 	/*Configure GPIO pin : PB11 */
 	GPIO_InitStruct.Pin = GPIO_PIN_11;
@@ -95,9 +101,37 @@ void setGPIOB(uint16_t GPIO_PIN, GPIO_PinState GPIO_PIN_STATE)
 	}
 }
 
+extern volatile uint8_t seven_segment_digits[4];
+extern uint32_t show_stopwatch_invert;
+extern uint32_t tim1_update_event_ticks;
+extern uint32_t seconds;
+extern uint32_t minutes;
+
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-	HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_12);
+	// PIN11 is configured to accept interrupts on falling edge
+	// PIN11 is configured to accept interrupts on both rising and falling edge
+
+	if (GPIO_Pin == GPIO_PIN_11)
+	{
+		HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_12);
+	}
+	if (GPIO_Pin == GPIO_PIN_10)
+	{
+
+		seven_segment_digits[3] = 9;
+		seven_segment_digits[2] = 9;
+		seven_segment_digits[1] = 9;
+		seven_segment_digits[0] = 9;
+
+		show_stopwatch_invert = ~show_stopwatch_invert;
+
+		tim1_update_event_ticks = 0;
+		seconds = 0;
+		minutes = 0;
+
+	}
+
 }
 
 /* USER CODE END 2 */
