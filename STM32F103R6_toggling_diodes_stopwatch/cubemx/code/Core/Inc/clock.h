@@ -8,6 +8,10 @@
 #ifndef CORE_INC_CLOCK_H_
 #define CORE_INC_CLOCK_H_
 
+#include "main.h"
+#include "tim.h"
+#include "gpio.h"
+
 void clock_init();
 
 

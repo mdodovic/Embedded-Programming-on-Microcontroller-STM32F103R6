@@ -46,4 +46,16 @@
 uint8_t seven_seg[] =
 { 0x81, 0xCF, 0x92, 0x86, 0xCC, 0xA4, 0xA0, 0x8F, 0x80, 0x84 };
 
+extern TIM_HandleTypeDef htim1;
 
+void clock_init()
+{
+	HAL_TIM_Base_Start_IT(&htim1);
+}
+
+
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+
+}
