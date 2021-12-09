@@ -108,6 +108,8 @@ extern uint32_t tim1_update_event_ticks;
 extern uint32_t seconds;
 extern uint32_t minutes;
 
+volatile uint32_t frequency = 0;
+
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
 	// PIN11 is configured to accept interrupts on falling edge
@@ -120,10 +122,10 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	if (GPIO_Pin == GPIO_PIN_10)
 	{
 
-		seven_segment_digits[3] = 9;
-		seven_segment_digits[2] = 9;
-		seven_segment_digits[1] = 9;
-		seven_segment_digits[0] = 9;
+		seven_segment_digits[0] = (frequency / 1000) % 10;
+		seven_segment_digits[1] = (frequency / 100) % 10;
+		seven_segment_digits[2] = (frequency / 10) % 10;
+		seven_segment_digits[3] = frequency % 10;
 
 		show_stopwatch_invert = ~show_stopwatch_invert;
 
@@ -156,7 +158,6 @@ volatile uint32_t first_rising_edge_ticks = 0;
 volatile uint32_t falling_edge_ticks = 0;
 volatile uint32_t second_rising_edge_ticks = 0;
 
-volatile uint32_t frequency = 0;
 
 
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
