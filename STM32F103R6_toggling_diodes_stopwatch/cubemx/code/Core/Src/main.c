@@ -98,6 +98,8 @@ int main(void)
 
 	clock_init();
 
+	HAL_TIM_IC_Start_IT(&htim1, TIM_CHANNEL_1);
+
 	/* USER CODE END 2 */
 
 	/* Infinite loop */

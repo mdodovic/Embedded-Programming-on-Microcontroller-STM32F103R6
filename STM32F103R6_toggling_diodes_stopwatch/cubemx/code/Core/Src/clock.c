@@ -65,6 +65,8 @@ uint32_t tim1_update_event_ticks = 0;
 uint32_t seconds = 0;
 uint32_t minutes = 0;
 
+extern uint32_t overflowCounter;
+
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
@@ -106,14 +108,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		GPIOC->ODR |= 0x1 << (8 + current_digit);
 
 
-//		current_digit = (current_digit + 1) % 4;
-//
-//		GPIOC->ODR &= ~0xF00;
-//
-//		GPIOC->ODR &= ~0xFF;
-//		GPIOC->ODR |= seven_segment_hexa[seven_segment_digits[current_digit]];
-//
-//		GPIOC->ODR |= 0x1 << (8 + current_digit);
-
+		overflowCounter++;
 	}
 }
