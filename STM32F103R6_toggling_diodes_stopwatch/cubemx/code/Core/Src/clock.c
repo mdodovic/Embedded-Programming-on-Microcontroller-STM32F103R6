@@ -43,19 +43,45 @@
  * |-----|||-----|-----|-----|-----|-----|-----|-----|-----|||-----|
  *
  */
-uint8_t seven_seg[] =
+uint8_t seven_segment_hexa[] =
 { 0x81, 0xCF, 0x92, 0x86, 0xCC, 0xA4, 0xA0, 0x8F, 0x80, 0x84 };
 
 extern TIM_HandleTypeDef htim1;
 
 void clock_init()
 {
+	GPIOC->ODR = seven_segment_hexa[1];
+
 	HAL_TIM_Base_Start_IT(&htim1);
 }
 
+uint8_t current_digit = 0;
+volatile uint8_t seven_segment_digits[4] =
+{ 1, 2, 3, 4 };
 
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
+	if(htim1.Instance == htim->Instance)
+	{
 
+		current_digit = (current_digit + 1) % 4;
+
+		// what is going to be shown on next showing digit
+		GPIOC->ODR &= ~0xFFF;
+		GPIOC->ODR |= seven_segment_hexa[seven_segment_digits[current_digit]];
+
+		GPIOC->ODR |= 0x1 << (8 + current_digit);
+
+
+//		current_digit = (current_digit + 1) % 4;
+//
+//		GPIOC->ODR &= ~0xF00;
+//
+//		GPIOC->ODR &= ~0xFF;
+//		GPIOC->ODR |= seven_segment_hexa[seven_segment_digits[current_digit]];
+//
+//		GPIOC->ODR |= 0x1 << (8 + current_digit);
+
+	}
 }
