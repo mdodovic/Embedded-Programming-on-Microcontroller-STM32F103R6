@@ -87,6 +87,7 @@ int main(void)
 	/* Initialize all configured peripherals */
 	MX_GPIO_Init();
 	MX_TIM1_Init();
+	MX_TIM3_Init();
 	/* USER CODE BEGIN 2 */
 	setGPIOB(GPIO_PIN_11, GPIO_PIN_SET);
 	setGPIOB(GPIO_PIN_12, GPIO_PIN_SET);
@@ -99,6 +100,7 @@ int main(void)
 	clock_init();
 
 	HAL_TIM_IC_Start_IT(&htim1, TIM_CHANNEL_1);
+	HAL_TIM_OC_Start(&htim3, TIM_CHANNEL_1);
 
 	/* USER CODE END 2 */
 

@@ -41,8 +41,8 @@ void MX_GPIO_Init(void)
 
 	/* GPIO Ports Clock Enable */
 	__HAL_RCC_GPIOC_CLK_ENABLE();
-	__HAL_RCC_GPIOB_CLK_ENABLE();
 	__HAL_RCC_GPIOA_CLK_ENABLE();
+	__HAL_RCC_GPIOB_CLK_ENABLE();
 
 	/*Configure GPIO pin Output Level */
 	HAL_GPIO_WritePin(GPIOC,
@@ -158,41 +158,43 @@ volatile uint32_t first_rising_edge_ticks = 0;
 volatile uint32_t falling_edge_ticks = 0;
 volatile uint32_t second_rising_edge_ticks = 0;
 
-
-
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
 {
-	switch (state) {
-		case WAIT_FIRST_RISING_EDGE:
-			if(htim->Instance == TIM1 && htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1)
-			{
-				first_rising_edge_ticks = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_1);
-				overflowCounter = 0;
-				state = WAIT_SECOND_RISING_EDGE;
-			}
-			break;
-		case WAIT_FALLING_EDGE:
+	switch (state)
+	{
+	case WAIT_FIRST_RISING_EDGE:
+		if (htim->Instance == TIM1 && htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1)
+		{
+			first_rising_edge_ticks = HAL_TIM_ReadCapturedValue(htim,
+					TIM_CHANNEL_1);
+			overflowCounter = 0;
+			state = WAIT_SECOND_RISING_EDGE;
+		}
+		break;
+	case WAIT_FALLING_EDGE:
 
-			break;
-		case WAIT_SECOND_RISING_EDGE:
-			if(htim->Instance == TIM1 && htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1)
-			{
-				second_rising_edge_ticks = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_1);
+		break;
+	case WAIT_SECOND_RISING_EDGE:
+		if (htim->Instance == TIM1 && htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1)
+		{
+			second_rising_edge_ticks = HAL_TIM_ReadCapturedValue(htim,
+					TIM_CHANNEL_1);
 
-				uint32_t ticks = (second_rising_edge_ticks + (overflowCounter * 79)) - first_rising_edge_ticks;
-				// this is number of ticks in 1 period
-				// FREQUENCY_CNT_CLK - frequency for counter clock
-				// 1 / FREQUENCY_CNT_CLK = period of counter clock
+			uint32_t ticks = (second_rising_edge_ticks + (overflowCounter * 79))
+					- first_rising_edge_ticks;
+			// this is number of ticks in 1 period
+			// FREQUENCY_CNT_CLK - frequency for counter clock
+			// 1 / FREQUENCY_CNT_CLK = period of counter clock
 
-				frequency = 1000 * FREQUENCY_CNT_CLK / ticks; // 1000 * is for milli Hz
+			frequency = 1000 * FREQUENCY_CNT_CLK / ticks; // 1000 * is for milli Hz
 
-				overflowCounter = 0;
-				state = WAIT_FIRST_RISING_EDGE;
-			}
+			overflowCounter = 0;
+			state = WAIT_FIRST_RISING_EDGE;
+		}
 
-			break;
-		default:
-			break;
+		break;
+	default:
+		break;
 	}
 
 }
