@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' standalone='yes'?>
 <WORKSPACE>
  <FRAME activewindow="0">
-  <PLACEMENT>2c00000002000000020000000083ffff0083fffffffffffffffffffff8ffffff1100000040040000cc030000</PLACEMENT>
+  <PLACEMENT>2c00000002000000030000000083ffff0083ffffffffffffffffffff380300001000000080070000cb030000</PLACEMENT>
   <WINDOW type="default" module="ISIS"/>
  </FRAME>
  <MODULE name="VSMDEBUG">
@@ -331,23 +331,15 @@
      <ITEM name="TopLineAddress">E000E000</ITEM>
     </PROPERTIES>
    </POPUP>
-   <POPUP w="600" x="1186" flags="0000802b" y="502" h="400" pid="100" iid="1">
+   <POPUP w="1011" x="903" flags="0000802b" y="100" h="554" pid="100" iid="1">
     <PROPERTIES>
-     <ITEM name="Breakpoint 0">"main",80001C2,000D,CAD9,42BD,1
+     <ITEM name="Breakpoint 0">"HAL_TIM_IC_CaptureCallback",8001AAE,0001,7026,2B10,1
 </ITEM>
-     <ITEM name="Breakpoint 1">"main",80001CC,0017,8E29,42BD,1
+     <ITEM name="Breakpoint 1">"HAL_TIM_IC_CaptureCallback",8001B18,006B,F16D,2B10,-1
 </ITEM>
-     <ITEM name="Breakpoint 2">"main",80001D4,001F,7278,42BD,1
+     <ITEM name="Breakpoint 2">"HAL_TIM_IC_CaptureCallback",8001B18,006B,F16D,2B10,-1
 </ITEM>
-     <ITEM name="Breakpoint 3">"main",80001DC,0027,07C9,42BD,1
-</ITEM>
-     <ITEM name="Breakpoint 4">"main",80001E4,002F,FB98,42BD,1
-</ITEM>
-     <ITEM name="Breakpoint 5">"main",80001EC,0037,BE8D,42BD,1
-</ITEM>
-     <ITEM name="Breakpoint 6">"main",80001F4,003F,0938,42BD,1
-</ITEM>
-     <ITEM name="Breakpoint 7">"main",80001FC,0047,D764,42BD,1
+     <ITEM name="Breakpoint 3">"HAL_TIM_IC_CaptureCallback",8001B68,00BB,DBCC,2B10,1
 </ITEM>
      <ITEM name="CaseSensitive">No</ITEM>
      <ITEM name="DISPADDRS">Yes</ITEM>
@@ -358,12 +350,12 @@
      <ITEM name="nBreakpoints">0</ITEM>
     </PROPERTIES>
    </POPUP>
-   <POPUP w="300" x="882" flags="0000000b" y="688" h="300" pid="101" iid="1">
+   <POPUP w="481" x="698" flags="0000000b" y="740" h="300" pid="101" iid="1">
     <PROPERTIES>
      <ITEM name="Address Column Width">94</ITEM>
      <ITEM name="AutoResize">No</ITEM>
      <ITEM name="Gridlines">Yes</ITEM>
-     <ITEM name="Name Column Width">94</ITEM>
+     <ITEM name="Name Column Width">228</ITEM>
      <ITEM name="ShowAddresses">Yes</ITEM>
      <ITEM name="ShowGlobals">Yes</ITEM>
      <ITEM name="ShowPreviousValues">No</ITEM>

@@ -100,6 +100,7 @@ int main(void)
 	clock_init();
 
 	HAL_TIM_IC_Start_IT(&htim1, TIM_CHANNEL_1);
+	HAL_TIM_IC_Start_IT(&htim1, TIM_CHANNEL_2);
 	HAL_TIM_OC_Start(&htim3, TIM_CHANNEL_1);
 
 	/* USER CODE END 2 */
