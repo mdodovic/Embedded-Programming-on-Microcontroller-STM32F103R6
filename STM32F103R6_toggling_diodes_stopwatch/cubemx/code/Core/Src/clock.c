@@ -57,13 +57,42 @@ void clock_init()
 
 uint8_t current_digit = 0;
 volatile uint8_t seven_segment_digits[4] =
-{ 1, 2, 3, 4 };
+{ 0, 0, 0, 0};
+
+
+uint32_t tim1_update_event_ticks = 0;
+uint32_t seconds = 0;
+uint32_t minutes = 0;
 
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
 	if(htim1.Instance == htim->Instance)
 	{
+
+		if(++tim1_update_event_ticks == 100)
+		{
+			tim1_update_event_ticks = 0; // local counter 100 ticks x 10ms = 1000ms = 1s;
+
+			seconds++;
+
+			if(seconds == 60)
+			{
+				seconds = 0;
+				minutes++;
+				if(minutes == 60)
+				{
+					minutes = 0;
+				}
+			}
+
+			seven_segment_digits[0] = minutes / 10;
+			seven_segment_digits[1] = minutes % 10;
+			seven_segment_digits[2] = seconds / 10;
+			seven_segment_digits[3] = seconds % 10;
+
+		}
+
 
 		current_digit = (current_digit + 1) % 4;
 
