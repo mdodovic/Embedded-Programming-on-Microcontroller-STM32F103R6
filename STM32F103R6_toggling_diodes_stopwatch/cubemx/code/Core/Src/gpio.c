@@ -158,6 +158,9 @@ volatile uint32_t first_rising_edge_ticks = 0;
 volatile uint32_t falling_edge_ticks = 0;
 volatile uint32_t second_rising_edge_ticks = 0;
 
+volatile uint32_t duty_cycle = 0;
+volatile uint32_t middle_ticks_active_value = 0;
+
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
 {
 	switch (state)
@@ -166,19 +169,28 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
 		if (htim->Instance == TIM1 && htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1)
 		{
 			first_rising_edge_ticks = HAL_TIM_ReadCapturedValue(htim,
-					TIM_CHANNEL_1);
+			TIM_CHANNEL_1);
 			overflowCounter = 0;
-			state = WAIT_SECOND_RISING_EDGE;
+			state = WAIT_FALLING_EDGE;
 		}
 		break;
 	case WAIT_FALLING_EDGE:
+		if (htim->Instance == TIM1 && htim->Channel == HAL_TIM_ACTIVE_CHANNEL_2)
+		{
+			falling_edge_ticks = HAL_TIM_ReadCapturedValue(htim,
+			TIM_CHANNEL_2);
 
+			middle_ticks_active_value = (falling_edge_ticks
+					+ (overflowCounter * 79)) - first_rising_edge_ticks;
+
+			state = WAIT_SECOND_RISING_EDGE;
+		}
 		break;
 	case WAIT_SECOND_RISING_EDGE:
 		if (htim->Instance == TIM1 && htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1)
 		{
 			second_rising_edge_ticks = HAL_TIM_ReadCapturedValue(htim,
-					TIM_CHANNEL_1);
+			TIM_CHANNEL_1);
 
 			uint32_t ticks = (second_rising_edge_ticks + (overflowCounter * 79))
 					- first_rising_edge_ticks;
@@ -187,6 +199,7 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
 			// 1 / FREQUENCY_CNT_CLK = period of counter clock
 
 			frequency = 1000 * FREQUENCY_CNT_CLK / ticks; // 1000 * is for milli Hz
+			duty_cycle = 100 * middle_ticks_active_value / ticks;
 
 			overflowCounter = 0;
 			state = WAIT_FIRST_RISING_EDGE;
