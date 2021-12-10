@@ -71,6 +71,7 @@ volatile uint32_t points_for_show[] =
 
 uint32_t round_robin_digit = 0;
 
+
 uint32_t counter = 0;
 
 void fill_seven_segment_display()
@@ -85,13 +86,16 @@ void fill_seven_segment_display()
 			break;
 
 		case POINTS:
-			GPIOC->ODR |= seven_segment_map[one_attack_for_show[round_robin_digit]];
+			GPIOC->ODR |= seven_segment_map[points_for_show[round_robin_digit]];
 			GPIOC->ODR |= 0x1 << (8 + round_robin_digit);
 
 			break;
 
 		case TIME_FOR_ATTACK:
-			GPIOC->ODR |= seven_segment_map[points_for_show[round_robin_digit]];
+			if(round_robin_digit == 1)
+				GPIOC->ODR |= seven_segment_map[one_attack_for_show[round_robin_digit]] & ~(1 << 7);
+			else
+				GPIOC->ODR |= seven_segment_map[one_attack_for_show[round_robin_digit]];
 			GPIOC->ODR |= 0x1 << (8 + round_robin_digit);
 
 			break;
@@ -100,44 +104,66 @@ void fill_seven_segment_display()
 
 }
 
+uint32_t hundrets_attack = 2400;
+
 uint32_t minutes = 10;
 uint32_t seconds = 0;
+uint32_t pause_game = 0;
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
 	if(htim->Instance == htim1.Instance)
 	{
-		counter++;
-		if(counter == 100)
+		if(pause_game == 0)
 		{
-			counter = 0;
 
-			seconds--;
-
-			if(seconds == -1)
+			hundrets_attack--;
+			if(hundrets_attack == 0)
 			{
-				seconds = 59;
-				minutes--;
-				if(minutes == -1)
-				{
-					minutes = 10;
-					seconds = 0;
-				}
+				hundrets_attack = 2400;
 			}
 
-			digits_for_show[0] = minutes / 10;
-			digits_for_show[1] = minutes % 10;
-			digits_for_show[2] = seconds / 10;
-			digits_for_show[3] = seconds % 10;
+			one_attack_for_show[0] = (hundrets_attack / 1000) % 10;
+			one_attack_for_show[1] = (hundrets_attack / 100) % 10;
+			one_attack_for_show[2] = (hundrets_attack / 10) % 10;
+			one_attack_for_show[3] = (hundrets_attack / 1) % 10;
 
+			counter++;
+
+			if(counter == 100)
+			{
+				counter = 0;
+
+				seconds--;
+
+				if(seconds == -1)
+				{
+					seconds = 59;
+					minutes--;
+					if(minutes == -1)
+					{
+						minutes = 10;
+						seconds = 0;
+					}
+				}
+
+				digits_for_show[0] = minutes / 10;
+				digits_for_show[1] = minutes % 10;
+				digits_for_show[2] = seconds / 10;
+				digits_for_show[3] = seconds % 10;
+
+			}
 		}
-
 		round_robin_digit = (round_robin_digit + 1) % 4;
 
 		fill_seven_segment_display();
 
 	}
 }
+
+uint32_t player1_points = 0;
+uint32_t player2_points = 0;
+
 
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
@@ -146,16 +172,27 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	{
 		// Diode
 		HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_15);
+		pause_game = 1 - pause_game;
 	}
 	if(GPIO_Pin == GPIO_PIN_13)
 	{
 		// P2 points
-		HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_15);
+		if(pause_game == 0)
+		{
+			player2_points += 2;
+			points_for_show[2] = (player2_points / 10) % 10;
+			points_for_show[3] = player2_points % 10;
+		}
 	}
 	if(GPIO_Pin == GPIO_PIN_12)
 	{
 		// P1 points
-		HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_15);
+		if(pause_game == 0)
+		{
+			player1_points += 2;
+			points_for_show[0] = (player1_points / 10) % 10;
+			points_for_show[1] = player1_points % 10;
+		}
 	}
 	if(GPIO_Pin == GPIO_PIN_11)
 	{
