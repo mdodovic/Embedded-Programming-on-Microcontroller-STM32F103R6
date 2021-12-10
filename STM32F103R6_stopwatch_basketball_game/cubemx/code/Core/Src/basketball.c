@@ -39,30 +39,35 @@
  * |-----|||-----|-----|-----|-----|-----|-----|-----|-----|||-----|
  *
  */
-uint8_t seven_segment_map[] =
-{ 0x81, 0xCF, 0x92, 0x86, 0xCC, 0xA4, 0xA0, 0x8F, 0x80, 0x84 };
-
-
-
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
-{
-	if(GPIO_Pin == GPIO_PIN_14)
-	{
-		HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_15);
-	}
-
-}
 
 extern TIM_HandleTypeDef htim1;
-
 
 void basketball_init()
 {
 	HAL_TIM_Base_Start_IT(&htim1);
 }
 
+
+
+uint8_t seven_segment_map[] =
+{ 0x81, 0xCF, 0x92, 0x86, 0xCC, 0xA4, 0xA0, 0x8F, 0x80, 0x84 };
+
+#define MATCH_TIME 0
+#define POINTS 1
+#define TIME_FOR_ATTACK 2
+
+uint32_t what_to_show = MATCH_TIME;
+
+
 volatile uint32_t digits_for_show[] =
 { 1, 0, 0, 0 };
+
+volatile uint32_t one_attack_for_show[] =
+{ 2, 4, 0, 0 };
+
+volatile uint32_t points_for_show[] =
+{ 0, 0, 0, 0 };
+
 
 uint32_t round_robin_digit = 0;
 
@@ -72,8 +77,26 @@ void fill_seven_segment_display()
 {
 	GPIOC->ODR &= ~0xFFF;
 
-	GPIOC->ODR |= seven_segment_map[digits_for_show[round_robin_digit]];
-	GPIOC->ODR |= 0x1 << (8 + round_robin_digit);
+	switch (what_to_show) {
+		case MATCH_TIME:
+			GPIOC->ODR |= seven_segment_map[digits_for_show[round_robin_digit]];
+			GPIOC->ODR |= 0x1 << (8 + round_robin_digit);
+
+			break;
+
+		case POINTS:
+			GPIOC->ODR |= seven_segment_map[one_attack_for_show[round_robin_digit]];
+			GPIOC->ODR |= 0x1 << (8 + round_robin_digit);
+
+			break;
+
+		case TIME_FOR_ATTACK:
+			GPIOC->ODR |= seven_segment_map[points_for_show[round_robin_digit]];
+			GPIOC->ODR |= 0x1 << (8 + round_robin_digit);
+
+			break;
+	}
+
 
 }
 
@@ -114,4 +137,30 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		fill_seven_segment_display();
 
 	}
+}
+
+
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+	if(GPIO_Pin == GPIO_PIN_14)
+	{
+		// Diode
+		HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_15);
+	}
+	if(GPIO_Pin == GPIO_PIN_13)
+	{
+		// P2 points
+		HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_15);
+	}
+	if(GPIO_Pin == GPIO_PIN_12)
+	{
+		// P1 points
+		HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_15);
+	}
+	if(GPIO_Pin == GPIO_PIN_11)
+	{
+		// Change showing on display
+		what_to_show = (what_to_show + 1) % 3;
+	}
+
 }
