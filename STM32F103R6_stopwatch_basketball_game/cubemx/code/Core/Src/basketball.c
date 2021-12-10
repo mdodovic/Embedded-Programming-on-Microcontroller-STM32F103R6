@@ -62,7 +62,7 @@ void basketball_init()
 }
 
 volatile uint32_t digits_for_show[] =
-{ 1, 2, 3, 4 };
+{ 1, 0, 0, 0 };
 
 uint32_t round_robin_digit = 0;
 
