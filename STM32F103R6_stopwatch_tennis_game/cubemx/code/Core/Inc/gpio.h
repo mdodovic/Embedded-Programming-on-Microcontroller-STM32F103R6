@@ -38,7 +38,7 @@ extern "C" {
 void MX_GPIO_Init(void);
 
 /* USER CODE BEGIN Prototypes */
-
+void setGPIOB(uint16_t GPIO_PIN, GPIO_PinState GPIO_PIN_STATE);
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus

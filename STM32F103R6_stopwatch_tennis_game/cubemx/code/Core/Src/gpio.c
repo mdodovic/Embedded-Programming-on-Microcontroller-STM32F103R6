@@ -55,6 +55,18 @@ void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 2 */
 
+void setGPIOB(uint16_t GPIO_PIN, GPIO_PinState GPIO_PIN_STATE)
+{
+	if(GPIO_PIN == GPIO_PIN_12)
+		HAL_GPIO_WritePin(GPIOB, GPIO_PIN, GPIO_PIN_STATE);
+	if(GPIO_PIN == GPIO_PIN_13)
+		HAL_GPIO_WritePin(GPIOB, GPIO_PIN, GPIO_PIN_STATE);
+	if(GPIO_PIN == GPIO_PIN_14)
+		HAL_GPIO_WritePin(GPIOB, GPIO_PIN, GPIO_PIN_STATE);
+	if(GPIO_PIN == GPIO_PIN_15)
+		HAL_GPIO_WritePin(GPIOB, GPIO_PIN, GPIO_PIN_STATE);
+}
+
 /* USER CODE END 2 */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
