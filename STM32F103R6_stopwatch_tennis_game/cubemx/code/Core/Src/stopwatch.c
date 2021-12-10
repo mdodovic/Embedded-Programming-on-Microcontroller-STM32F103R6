@@ -50,7 +50,24 @@ void stopwatch_init()
 
 }
 
+volatile uint32_t digits_to_be_shown[] =
+{1, 2, 3, 4};
+
+volatile uint32_t current_field_on_display = 0;
+
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
+	if(htim1.Instance == htim->Instance)
+	{
 
+		// change digits_to_be_shown
+
+		current_field_on_display = (current_field_on_display + 1) % 4;
+
+		GPIOC->ODR &= ~0xFFF;
+
+		GPIOC->ODR |= seven_segment_digits[digits_to_be_shown[current_field_on_display]];
+		GPIOC->ODR |= 0x1 << (current_field_on_display + 8);
+
+	}
 }
