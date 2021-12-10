@@ -59,30 +59,33 @@ uint32_t tim1_ticks_counter = 0; // TIM1 is configured to set UE every 10ms
 uint32_t seconds = 0;
 uint32_t minutes = 0;
 
+uint32_t stopwatch_paused = 1;
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
 	if(htim1.Instance == htim->Instance)
 	{
-		if(++tim1_ticks_counter == 100)
+		if(stopwatch_paused == 0)
 		{
-			tim1_ticks_counter = 0;
-			if(++seconds == 3)
+			if(++tim1_ticks_counter == 100)
 			{
-				seconds = 0;
-				if(++minutes == 2)
+				tim1_ticks_counter = 0;
+				if(++seconds == 60)
 				{
-					minutes = 0;
+					seconds = 0;
+					if(++minutes == 60)
+					{
+						minutes = 0;
+					}
 				}
+
+				digits_to_be_shown[0] = minutes / 10;
+				digits_to_be_shown[1] = minutes % 10;
+				digits_to_be_shown[2] = seconds / 10;
+				digits_to_be_shown[3] = seconds % 10;
+
 			}
-
-			digits_to_be_shown[0] = minutes / 10;
-			digits_to_be_shown[1] = minutes % 10;
-			digits_to_be_shown[2] = seconds / 10;
-			digits_to_be_shown[3] = seconds % 10;
-
 		}
-
 		current_field_on_display = (current_field_on_display + 1) % 4;
 
 		GPIOC->ODR &= ~0xFFF;

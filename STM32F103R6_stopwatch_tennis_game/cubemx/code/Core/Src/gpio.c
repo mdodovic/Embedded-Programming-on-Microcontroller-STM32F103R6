@@ -94,12 +94,15 @@ void setGPIOB(uint16_t GPIO_PIN, GPIO_PinState GPIO_PIN_STATE)
 		HAL_GPIO_WritePin(GPIOB, GPIO_PIN, GPIO_PIN_STATE);
 }
 
+extern uint32_t stopwatch_paused;
+
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
 
 	if(GPIO_Pin == GPIO_PIN_11)
 	{
 		HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_12);
+		stopwatch_paused = 1 - stopwatch_paused;
 	}
 
 }
