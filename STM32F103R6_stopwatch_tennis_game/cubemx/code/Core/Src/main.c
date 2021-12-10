@@ -23,7 +23,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "stopwatch.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -94,6 +94,8 @@ int main(void)
 	setGPIOB(GPIO_PIN_15, GPIO_PIN_SET);
 	setGPIOB(GPIO_PIN_13, GPIO_PIN_RESET);
 	setGPIOB(GPIO_PIN_14, GPIO_PIN_RESET);
+
+	stopwatch_init();
 
 	/* USER CODE END 2 */
 
