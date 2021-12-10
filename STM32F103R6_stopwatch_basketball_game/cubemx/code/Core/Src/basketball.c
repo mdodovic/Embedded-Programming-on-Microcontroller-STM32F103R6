@@ -46,6 +46,7 @@ void basketball_init()
 {
 	HAL_TIM_Base_Start_IT(&htim1);
 
+	HAL_TIM_Base_Start_IT(&htim3);
 	HAL_TIM_IC_Start_IT(&htim3, TIM_CHANNEL_1);
 	HAL_TIM_IC_Start_IT(&htim3, TIM_CHANNEL_2);
 }
