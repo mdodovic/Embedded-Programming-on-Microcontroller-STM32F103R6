@@ -16,3 +16,16 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 
 }
 
+extern TIM_HandleTypeDef htim1;
+
+
+void basketball_init()
+{
+	HAL_TIM_Base_Start_IT(&htim1);
+}
+
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+
+}
