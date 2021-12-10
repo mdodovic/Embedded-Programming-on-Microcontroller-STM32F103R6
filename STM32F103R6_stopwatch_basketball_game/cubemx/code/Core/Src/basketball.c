@@ -41,7 +41,7 @@
  */
 
 extern TIM_HandleTypeDef htim1;
-
+extern TIM_HandleTypeDef htim3;
 void basketball_init()
 {
 	HAL_TIM_Base_Start_IT(&htim1);
@@ -110,6 +110,8 @@ uint32_t minutes = 10;
 uint32_t seconds = 0;
 uint32_t pause_game = 0;
 
+uint32_t tim3_overflow_counter = 0;
+
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
 	if(htim->Instance == htim1.Instance)
@@ -159,6 +161,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		fill_seven_segment_display();
 
 	}
+	if(htim->Instance == htim3.Instance)
+	{
+		tim3_overflow_counter++;
+	}
 }
 
 uint32_t player1_points = 0;
@@ -200,4 +206,65 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 		what_to_show = (what_to_show + 1) % 3;
 	}
 
+}
+
+#define ARR 9
+uint32_t rising_edge_ticks = 0;
+uint32_t falling_edge_ticks = 0;
+
+void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
+{
+	if(htim->Instance == htim3.Instance)
+	{
+		if(htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1)
+		{
+			rising_edge_ticks = HAL_TIM_ReadCapturedValue(&htim3, TIM_CHANNEL_1);
+			tim3_overflow_counter = 0;
+		}
+		if(htim->Channel == HAL_TIM_ACTIVE_CHANNEL_2)
+		{
+			falling_edge_ticks = HAL_TIM_ReadCapturedValue(&htim3, TIM_CHANNEL_1);
+			falling_edge_ticks = falling_edge_ticks + tim3_overflow_counter * ARR;
+
+			if(falling_edge_ticks - rising_edge_ticks >= 2000)
+			{
+
+				player1_points = 0;
+				player2_points = 0;
+
+				points_for_show[0] = (player1_points / 10) % 10;
+				points_for_show[1] = player1_points % 10;
+				points_for_show[2] = (player2_points / 10) % 10;
+				points_for_show[3] = player2_points % 10;
+
+				hundrets_attack = 2400;
+
+				one_attack_for_show[0] = (hundrets_attack / 1000) % 10;
+				one_attack_for_show[1] = (hundrets_attack / 100) % 10;
+				one_attack_for_show[2] = (hundrets_attack / 10) % 10;
+				one_attack_for_show[3] = (hundrets_attack / 1) % 10;
+
+				minutes = 10;
+				seconds = 0;
+
+				digits_for_show[0] = minutes / 10;
+				digits_for_show[1] = minutes % 10;
+				digits_for_show[2] = seconds / 10;
+				digits_for_show[3] = seconds % 10;
+
+				pause_game = 0;
+
+				counter = 0;
+
+				what_to_show = MATCH_TIME;
+
+				round_robin_digit = 0;
+
+
+			}
+
+			tim3_overflow_counter = 0;
+		}
+
+	}
 }
