@@ -56,7 +56,7 @@ Core/Src/system_stm32f1xx.c
 
 # ASM sources
 ASM_SOURCES =  \
-startup_stm32f103x6.s
+Core/Src/startup_stm32f103x6_init.s
 
 
 #######################################
@@ -119,10 +119,10 @@ C_INCLUDES =  \
 # compile gcc flags
 ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections
 
-CFLAGS = $(MCU) $(C_DEFS) $(C_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections
+CFLAGS = $(MCU) $(C_DEFS) $(C_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections -mlong-calls
 
 ifeq ($(DEBUG), 1)
-CFLAGS += -g -gdwarf-2
+CFLAGS += -g -gdwarf-2 -fdebug-prefix-map==../
 endif
 
 
