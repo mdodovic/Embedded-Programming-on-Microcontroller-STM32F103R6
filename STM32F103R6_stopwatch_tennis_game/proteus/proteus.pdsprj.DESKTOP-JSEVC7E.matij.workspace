@@ -332,17 +332,17 @@
      <ITEM name="TopLineAddress">E000E000</ITEM>
     </PROPERTIES>
    </POPUP>
-   <POPUP w="600" x="1133" flags="0000002b" y="424" h="400" pid="100" iid="1">
+   <POPUP w="925" x="963" flags="0000802b" y="171" h="665" pid="100" iid="1">
     <PROPERTIES>
-     <ITEM name="Breakpoint 0">"HAL_TIMEx_CommutCallback",800087A,0001,98DF,CE9F,-472712120
+     <ITEM name="Breakpoint 0">"HAL_TIM_PeriodElapsedCallback",80019E6,00A9,1BB6,1318,1
 </ITEM>
-     <ITEM name="Breakpoint 1">"stopwatch_init",800136A,0011,4A15,1318,-1
+     <ITEM name="Breakpoint 1">"fill_points_to_be_shown",8001B1C,00FB,F7A2,1318,-1
 </ITEM>
-     <ITEM name="Breakpoint 2">"HAL_TIM_PeriodElapsedCallback",80013C4,0057,236C,1318,-1
+     <ITEM name="Breakpoint 2">"HAL_TIM_IC_CaptureCallback",8001C8A,0019,24E7,1318,1
 </ITEM>
-     <ITEM name="Breakpoint 3">"stopwatch_init",8001316,0001,99D8,1318,-1
+     <ITEM name="Breakpoint 3">"HAL_TIM_IC_CaptureCallback",8001C92,0021,A697,1318,1
 </ITEM>
-     <ITEM name="Breakpoint 4">"main",80001E4,002F,FB98,42BD,1
+     <ITEM name="Breakpoint 4">"HAL_TIM_IC_CaptureCallback",8001C9A,0029,BEEB,1318,1
 </ITEM>
      <ITEM name="Breakpoint 5">"main",80001EC,0037,BE8D,42BD,1
 </ITEM>
@@ -354,15 +354,15 @@
      <ITEM name="DISPOPCODES">No</ITEM>
      <ITEM name="FIXUPBPTS">Yes</ITEM>
      <ITEM name="WordsOnly">No</ITEM>
-     <ITEM name="nBreakpoints">3</ITEM>
+     <ITEM name="nBreakpoints">0</ITEM>
     </PROPERTIES>
    </POPUP>
-   <POPUP w="300" x="737" flags="0000000b" y="447" h="300" pid="101" iid="1">
+   <POPUP w="485" x="427" flags="0000000b" y="392" h="424" pid="101" iid="1">
     <PROPERTIES>
      <ITEM name="Address Column Width">94</ITEM>
      <ITEM name="AutoResize">No</ITEM>
      <ITEM name="Gridlines">Yes</ITEM>
-     <ITEM name="Name Column Width">94</ITEM>
+     <ITEM name="Name Column Width">186</ITEM>
      <ITEM name="ShowAddresses">Yes</ITEM>
      <ITEM name="ShowGlobals">Yes</ITEM>
      <ITEM name="ShowPreviousValues">No</ITEM>

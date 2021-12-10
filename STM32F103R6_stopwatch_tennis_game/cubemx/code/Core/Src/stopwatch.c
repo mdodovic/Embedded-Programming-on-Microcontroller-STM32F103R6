@@ -49,11 +49,16 @@ uint8_t seven_segment_digits[] =
 { 0x81, 0xCF, 0x92, 0x86, 0xCC, 0xA4, 0xA0, 0x8F, 0x80, 0x84, 0xC2, 0x88, 0xFF};
 
 extern TIM_HandleTypeDef htim1;
+extern TIM_HandleTypeDef htim3;
 
 void stopwatch_init()
 {
 	HAL_TIM_Base_Start_IT(&htim1);
 
+	// TIM1->SR = ~0x1;
+	HAL_TIM_Base_Start_IT(&htim3);
+	HAL_TIM_IC_Start_IT(&htim3, TIM_CHANNEL_1);
+	HAL_TIM_IC_Start_IT(&htim3, TIM_CHANNEL_2);
 }
 
 volatile uint32_t digits_to_be_shown[] =
@@ -79,6 +84,8 @@ uint32_t stopwatch_paused = 1;
 #define POINTS_IN_SET 2
 
 uint32_t mode_of_display = STOPWATCH;
+
+uint32_t tim3_overflow_counter = 0;
 
 void fill_GPIOC_to_be_shown()
 {
@@ -137,6 +144,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 		fill_GPIOC_to_be_shown();
 
+	}
+	if(htim3.Instance == htim->Instance)
+	{
+		tim3_overflow_counter++;
 	}
 }
 
@@ -293,4 +304,35 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 
 }
 
+#define ARR 9
 
+uint32_t rising_edge_ticks = 0;
+uint32_t falling_edge_ticks = 0;
+
+void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
+{
+	if(htim3.Instance == htim->Instance)
+	{
+		if(htim3.Channel == HAL_TIM_ACTIVE_CHANNEL_1)
+		{
+			tim3_overflow_counter = 0;
+			rising_edge_ticks = TIM3->CCR1;
+		} else if(htim3.Channel == HAL_TIM_ACTIVE_CHANNEL_2)
+		{
+			falling_edge_ticks = TIM3->CCR2;
+			falling_edge_ticks = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_2);
+			if((falling_edge_ticks + tim3_overflow_counter * ARR - rising_edge_ticks) >= 2000)
+			{
+				gem_P1 = 0;
+				gem_P2 = 0;
+
+				points_P1 = 0;
+				points_P2 = 0;
+
+				fill_points_to_be_shown();
+			}
+			tim3_overflow_counter = 0;
+		}
+
+	}
+}
