@@ -19,6 +19,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "tim.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -85,6 +86,7 @@ int main(void)
 
 	/* Initialize all configured peripherals */
 	MX_GPIO_Init();
+	MX_TIM1_Init();
 	/* USER CODE BEGIN 2 */
 
 	setGPIOB(GPIO_PIN_11, GPIO_PIN_SET);
