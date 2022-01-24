@@ -17,7 +17,7 @@ void exampleTaskFunction(void* parameters);
 
 void exampleInit()
 {
-	xTaskCreate(exampleTaskFunction, "exampleTask0", 128, (void*) GPIO_PIN_0, 1, NULL);
+	xTaskCreate(exampleTaskFunction, "exampleTask0", 128, (void*) GPIO_PIN_0, 2, NULL);
 	xTaskCreate(exampleTaskFunction, "exampleTask1", 128, (void*) GPIO_PIN_1, 1, NULL);
 }
 
