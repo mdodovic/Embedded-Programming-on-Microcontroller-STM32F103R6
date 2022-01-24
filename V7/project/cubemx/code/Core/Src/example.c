@@ -44,6 +44,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	{
 		BaseType_t woken = pdFALSE;
 		vTaskNotifyGiveFromISR(defferedHandle, &woken);
+		portYIELD_FROM_ISR(woken);
 	}
 }
 
