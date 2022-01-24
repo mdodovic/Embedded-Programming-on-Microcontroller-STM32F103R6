@@ -13,13 +13,38 @@
 
 
 void exampleTaskFunction(void* parameters);
+void taskController(void* parameters);
+void taskToggler(void* parameters);
+
+TaskHandle_t controllerHandle;
+TaskHandle_t togglerHandle;
 
 
 void exampleInit()
 {
-	xTaskCreate(exampleTaskFunction, "exampleTask0", 128, (void*) GPIO_PIN_0, 1, NULL);
-	xTaskCreate(exampleTaskFunction, "exampleTask1", 128, (void*) GPIO_PIN_1, 1, NULL);
+	xTaskCreate(taskController, "controller", 128, NULL, 2, &controllerHandle);
+	xTaskCreate(taskToggler, "toggler", 128, NULL, 2, &togglerHandle);
 }
+
+void taskController(void* parameters)
+{
+	while(1)
+	{
+		xTaskNotifyGive(togglerHandle);
+		vTaskDelay(pdMS_TO_TICKS(1000));
+	}
+
+}
+
+void taskToggler(void* parameters)
+{
+	while(1)
+	{
+		ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+		HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_0);
+	}
+}
+
 
 void exampleTaskFunction(void* parameters)
 {
@@ -31,3 +56,6 @@ void exampleTaskFunction(void* parameters)
 		for(int i = 0; i < 1000000; i++);
 	}
 }
+
+
+
