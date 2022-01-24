@@ -15,16 +15,38 @@
 void exampleTaskFunction(void* parameters);
 void taskController(void* parameters);
 void taskToggler(void* parameters);
+void defferedTask(void* parameters);
 
 TaskHandle_t controllerHandle;
 TaskHandle_t togglerHandle;
+TaskHandle_t defferedHandle;
 
 
 void exampleInit()
 {
-	xTaskCreate(taskController, "controller", 128, NULL, 2, &controllerHandle);
-	xTaskCreate(taskToggler, "toggler", 128, NULL, 2, &togglerHandle);
+	//xTaskCreate(taskController, "controller", 128, NULL, 2, &controllerHandle);
+	//xTaskCreate(taskToggler, "toggler", 128, NULL, 2, &togglerHandle);
+	xTaskCreate(defferedTask, "defferedTask", 128, NULL, 2, &defferedHandle);
 }
+
+void defferedTask(void* parameters)
+{
+	while(1)
+	{
+		ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+		HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_0);
+	}
+}
+
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+	if(GPIO_Pin == GPIO_PIN_0)
+	{
+		BaseType_t woken = pdFALSE;
+		vTaskNotifyGiveFromISR(defferedHandle, &woken);
+	}
+}
+
 
 void taskController(void* parameters)
 {
