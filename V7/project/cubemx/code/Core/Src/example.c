@@ -26,6 +26,8 @@ void exampleTaskFunction(void* parameters)
 	while(1)
 	{
 		HAL_GPIO_TogglePin(GPIOC, (uint32_t) parameters);
-		vTaskDelay(1000);
+//		vTaskDelay(1000);
+
+		for(int i = 0; i < 1000000; i++);
 	}
 }
