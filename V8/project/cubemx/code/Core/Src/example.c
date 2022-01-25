@@ -43,6 +43,12 @@ static void exampleTask(void *parameters)
 
 	LCD_CommandEnqueue(LCD_INSTRUCTION, LCD_SET_DD_RAM_ADDRESS_INSTRUCTION | 0x03);
 
+	for(uint32_t i = 0; i < 10; i++)
+	{
+		LCD_CommandEnqueue(LCD_INSTRUCTION, LCD_SHIFT_INSTRUCTION | LCD_SHIFT_DISPLAY | LCD_SHIFT_DIRECTION_RIGHT);
+		vTaskDelay(pdMS_TO_TICKS(500));
+	}
+
 	while(1)
 	{
 		vTaskDelay(pdMS_TO_TICKS(1000));
