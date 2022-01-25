@@ -40,6 +40,8 @@ Core/Src/main.c \
 Core/Src/gpio.c \
 Core/Src/freertos.c \
 Core/Src/stm32f1xx_it.c \
+Core/Src/lcd.c \
+Core/Src/example.c \
 Core/Src/stm32f1xx_hal_msp.c \
 Core/Src/stm32f1xx_hal_timebase_tim.c \
 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.c \
