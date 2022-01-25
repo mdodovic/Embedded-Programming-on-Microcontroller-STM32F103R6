@@ -15,6 +15,7 @@
 
 static void exampleTask(void *parameters)
 {
+
 	char line1[16] = "Mikroprocesorski";
 
 	LCD_CommandEnqueue(LCD_INSTRUCTION, LCD_SET_DD_RAM_ADDRESS_INSTRUCTION | 0x00);
@@ -27,6 +28,7 @@ static void exampleTask(void *parameters)
 
 	LCD_CommandEnqueue(LCD_INSTRUCTION, LCD_CONTROL_INSTRUCTION | LCD_CONTROL_DISPLAY_ON | LCD_CONTROL_BLINK_OFF | LCD_CONTROL_CURSOR_ON);
 
+
 	char line2[16] = "sistemi";
 
 	LCD_CommandEnqueue(LCD_INSTRUCTION, LCD_SET_DD_RAM_ADDRESS_INSTRUCTION | 0x40);
@@ -37,10 +39,9 @@ static void exampleTask(void *parameters)
 		vTaskDelay(pdMS_TO_TICKS(100));
 	}
 
-	LCD_CommandEnqueue(LCD_INSTRUCTION, LCD_SET_DD_RAM_ADDRESS_INSTRUCTION | 0x03);
-
 	LCD_CommandEnqueue(LCD_INSTRUCTION, LCD_CONTROL_INSTRUCTION | LCD_CONTROL_DISPLAY_ON | LCD_CONTROL_BLINK_ON | LCD_CONTROL_CURSOR_ON);
 
+	LCD_CommandEnqueue(LCD_INSTRUCTION, LCD_SET_DD_RAM_ADDRESS_INSTRUCTION | 0x03);
 
 	while(1)
 	{
