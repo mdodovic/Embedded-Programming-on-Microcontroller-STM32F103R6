@@ -5,19 +5,23 @@
  *      Author: matij
  */
 
+#include "uart_driver.h"
 
 #include "FreeRTOS.h"
 
 #include "task.h"
 #include "queue.h"
-
+#include "semphr.h"
 #include "usart.h"
 
+
+#include "string.h"
 
 static QueueHandle_t UART_TransmitQueueHandle;
 
 static TaskHandle_t UART_TransmitTaskHandle;
 
+static SemaphoreHandle_t UART_TransmitMutexHandle;
 
 static void UART_TransmitTask(void* p)
 {
@@ -52,12 +56,31 @@ void UART_Init()
 
 	UART_TransmitQueueHandle = xQueueCreate(128, sizeof(uint8_t));
 
+	UART_TransmitMutexHandle = xSemaphoreCreateMutex();
 }
 
 
 void UART_AsyncTransmitCharacter(char character)
 {
+	xSemaphoreTake(UART_TransmitMutexHandle, portMAX_DELAY);
+
 	xQueueSendToBack(UART_TransmitQueueHandle, &character, portMAX_DELAY);
+
+	xSemaphoreGive(UART_TransmitMutexHandle);
 }
 
+void UART_AsyncTransmitString(char const* string)
+{
+	if(string != NULL)
+	{
+		xSemaphoreTake(UART_TransmitMutexHandle, portMAX_DELAY);
+
+		for(uint32_t i = 0; i < strlen(string); i++)
+		{
+			xQueueSendToBack(UART_TransmitQueueHandle, string + i, portMAX_DELAY);
+		}
+
+		xSemaphoreGive(UART_TransmitMutexHandle);
+	}
+}
 

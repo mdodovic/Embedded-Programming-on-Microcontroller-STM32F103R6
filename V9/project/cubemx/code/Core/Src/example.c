@@ -15,7 +15,9 @@ static void exampleTask(void* p)
 {
 	while(1)
 	{
-		UART_AsyncTransmitCharacter('a');
+		UART_AsyncTransmitCharacter('M');
+		UART_AsyncTransmitString("IPS");
+		UART_AsyncTransmitCharacter('\r');
 		vTaskDelay(pdMS_TO_TICKS(1000));
 	}
 }
