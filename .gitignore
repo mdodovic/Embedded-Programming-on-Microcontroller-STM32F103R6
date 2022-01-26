@@ -12,7 +12,12 @@ local.properties
 .loadpath
 .recommenders
 
+# build directory
 build/
+
+# proteus 
+**/proteus/*
+!**/proteus/proteus.pdsprj
 
 # External tool builders
 .externalToolBuilders/
