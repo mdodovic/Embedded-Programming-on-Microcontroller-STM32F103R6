@@ -84,3 +84,25 @@ void UART_AsyncTransmitString(char const* string)
 	}
 }
 
+void UART_AsyncTransmitDecimal(uint32_t decimal)
+{
+
+	xSemaphoreTake(UART_TransmitMutexHandle, portMAX_DELAY);
+
+	char digits[32];
+	uint32_t index = 32;
+	while(index >= 0 && decimal != 0)
+	{
+		digits[--index] = decimal % 10 + '0';
+		decimal /= 10;
+	}
+
+	for(uint32_t i = index; i < 32; i++)
+	{
+		xQueueSendToBack(UART_TransmitQueueHandle, digits + i, portMAX_DELAY);
+	}
+
+	xSemaphoreGive(UART_TransmitMutexHandle);
+}
+
+
