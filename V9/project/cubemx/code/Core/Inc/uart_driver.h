@@ -10,6 +10,6 @@
 
 
 extern void UART_Init();
-
+extern void UART_AsyncTransmitCharacter(char character);
 
 #endif /* CORE_INC_UART_DRIVER_H_ */
