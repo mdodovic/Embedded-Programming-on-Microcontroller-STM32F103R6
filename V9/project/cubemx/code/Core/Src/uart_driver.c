@@ -158,45 +158,49 @@ char UART_BlockReceiveCharacter()
 	return c;
 }
 
-char* UART_BlockTransmitString()
+char* UART_BlockReceiveString()
 {
-	/*
+	xSemaphoreTake(UART_ReceiveMutexHandle, portMAX_DELAY);
+
+	char *string = pvPortMalloc(64);
+	uint32_t i = 0;
 	if(string != NULL)
 	{
-		xSemaphoreTake(UART_TransmitMutexHandle, portMAX_DELAY);
-
-		for(uint32_t i = 0; i < strlen(string); i++)
+		char c = '\0';
+		while(c != '\r' && i < 64)
 		{
-			xQueueSendToBack(UART_TransmitQueueHandle, string + i, portMAX_DELAY);
+			xQueueReceive(UART_ReceiveQueueHandle, &c, portMAX_DELAY);
+			string[i++] = c;
 		}
 
-		xSemaphoreGive(UART_TransmitMutexHandle);
+		string[--i] = '\0';
 	}
-	*/
-	return NULL;
+
+	xSemaphoreGive(UART_ReceiveMutexHandle);
+
+	return string;
 }
 
-uint32_t UART_BlockTransmitDecimal()
+uint32_t UART_BlockReceiveDecimal()
 {
-/*
+
 	xSemaphoreTake(UART_TransmitMutexHandle, portMAX_DELAY);
 
-	char digits[32];
-	uint32_t index = 32;
-	while(index >= 0 && decimal != 0)
-	{
-		digits[--index] = decimal % 10 + '0';
-		decimal /= 10;
-	}
+	uint32_t decimal = 0;
 
-	for(uint32_t i = index; i < 32; i++)
+	char c = '\0';
+	while(c != '\r')
 	{
-		xQueueSendToBack(UART_TransmitQueueHandle, digits + i, portMAX_DELAY);
+		xQueueReceive(UART_ReceiveQueueHandle, &c, portMAX_DELAY);
+		if(c >= '0' && c <= '9')
+		{
+			decimal = decimal * 10 + c - '0';
+		}
 	}
 
 	xSemaphoreGive(UART_TransmitMutexHandle);
-*/
-	return 0;
+
+	return decimal;
 }
 
 
