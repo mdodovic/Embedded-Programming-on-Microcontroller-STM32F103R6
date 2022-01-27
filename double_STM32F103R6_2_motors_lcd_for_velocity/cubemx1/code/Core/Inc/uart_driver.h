@@ -10,8 +10,7 @@
 
 typedef enum
 {
-	TERMINAL = 0,
-	MCU2 = 1
+	VT = 0, MCU2 = 1
 } UART_Target;
 
 extern void UART_Init();

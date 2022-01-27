@@ -49,15 +49,15 @@ static void UART_TransmitTask(void* p)
 	}
 }
 
-// callback after the transmission is compledet
+// callback after the transmission is completed
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
 	// transmission finished: next transmission can start
-	if(huart->Instance == phuart[TERMINAL]->Instance)
+	if(huart->Instance == phuart[VT]->Instance)
 	{
 		BaseType_t woken;
-		vTaskNotifyGiveFromISR(UART_TaskTransmitHandle[TERMINAL], &woken);
+		vTaskNotifyGiveFromISR(UART_TaskTransmitHandle[VT], &woken);
 		portYIELD_FROM_ISR(woken);
 	}
 }
@@ -68,9 +68,9 @@ void UART_Init()
 {
 	/* Transmit from Virtual Terminal */
 
-	UART_QueueTransmitHandle[TERMINAL] = xQueueCreate(128, sizeof(uint8_t));
-	UART_MutexTransmitHandle[TERMINAL] = xSemaphoreCreateMutex();
-	xTaskCreate(UART_TransmitTask, "UART_TransmitTask", 64, (void *) TERMINAL, 4, UART_TaskTransmitHandle[TERMINAL]);
+	UART_QueueTransmitHandle[VT] = xQueueCreate(128, sizeof(uint8_t));
+	UART_MutexTransmitHandle[VT] = xSemaphoreCreateMutex();
+	xTaskCreate(UART_TransmitTask, "UART_TransmitTask", 64, (void *) VT, 4, &UART_TaskTransmitHandle[VT]);
 
 }
 
