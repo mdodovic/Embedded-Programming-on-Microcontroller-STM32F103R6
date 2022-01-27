@@ -14,11 +14,13 @@
 
 void MCU_Task(void* p)
 {
+
 	UART_AsyncTransmitString("MIPS\r");
 
 	while(1)
 	{
-
+	//	UART_AsyncTransmitString("MIPS\r");
+		vTaskDelay(pdMS_TO_TICKS(200));
 	}
 }
 
