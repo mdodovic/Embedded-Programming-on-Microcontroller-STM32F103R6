@@ -22,7 +22,10 @@ static void mcu1Task(void *p)
 	while(1)
 	{
 		UART_AsyncTransmitString(VT, "MPIS\r");
-		vTaskDelay(pdMS_TO_TICKS(500));
+		char* command =	UART_BlockReceiveString(VT);
+		UART_AsyncTransmitString(VT, command);
+
+		//vTaskDelay(pdMS_TO_TICKS(500));
 	}
 }
 

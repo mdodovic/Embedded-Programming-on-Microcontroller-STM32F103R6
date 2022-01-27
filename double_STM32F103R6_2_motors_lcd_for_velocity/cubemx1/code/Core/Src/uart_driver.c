@@ -24,9 +24,9 @@ static QueueHandle_t UART_QueueTransmitHandle[2];
 static SemaphoreHandle_t UART_MutexTransmitHandle[2];
 static TaskHandle_t UART_TaskTransmitHandle[2];
 
-//static QueueHandle_t UART_QueueReceiveHandle[2];
-//static SemaphoreHandle_t UART_MutexReceiveHandle[2];
-//static TaskHandle_t UART_TaskReceiveHandle[2];
+static QueueHandle_t UART_QueueReceiveHandle[2];
+static SemaphoreHandle_t UART_MutexReceiveHandle[2];
+static TaskHandle_t UART_TaskReceiveHandle[2];
 
 /* Transmit */
 
@@ -62,15 +62,55 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
 	}
 }
 
+/* Receive */
+
+// task for receiving
+
+static void UART_ReceiveTask(void* p)
+{
+	UART_Target target = (UART_Target) p;
+	uint8_t buffer;
+
+	while(1)
+	{
+
+		HAL_UART_Receive_IT(phuart[target], &buffer, sizeof(uint8_t)); // initiate receiving
+
+		ulTaskNotifyTake(pdTRUE, portMAX_DELAY); // block until it is received
+
+		xQueueSendToBack(UART_QueueReceiveHandle[target], &buffer, portMAX_DELAY); // send character to queue
+
+	}
+}
+
+// callback after the receive is completed
+
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+	// receive finished: character can be consumed
+	if(huart->Instance == phuart[VT]->Instance)
+	{
+		BaseType_t woken = pdFALSE;
+		vTaskNotifyGiveFromISR(UART_TaskReceiveHandle[VT], &woken);
+		portYIELD_FROM_ISR(woken);
+	}
+}
 
 
 void UART_Init()
 {
-	/* Transmit from Virtual Terminal */
+	/* Transmit to Virtual Terminal */
 
 	UART_QueueTransmitHandle[VT] = xQueueCreate(128, sizeof(uint8_t));
 	UART_MutexTransmitHandle[VT] = xSemaphoreCreateMutex();
 	xTaskCreate(UART_TransmitTask, "UART_TransmitTask", 64, (void *) VT, 4, &UART_TaskTransmitHandle[VT]);
+
+	/* Receive from Virtual Terminal */
+
+	UART_QueueReceiveHandle[VT] = xQueueCreate(128, sizeof(uint8_t));
+	UART_MutexReceiveHandle[VT] = xSemaphoreCreateMutex();
+	xTaskCreate(UART_ReceiveTask, "UART_ReceiveTask", 64, (void *) VT, 4, &UART_TaskReceiveHandle[VT]);
+
 
 }
 
@@ -91,3 +131,29 @@ void UART_AsyncTransmitString(UART_Target target, const char* string)
 		xSemaphoreGive(UART_MutexTransmitHandle[target]);
 	}
 }
+
+/* utility: Receive */
+
+char* UART_BlockReceiveString(UART_Target target)
+{
+	xSemaphoreTake(UART_MutexReceiveHandle[target], portMAX_DELAY);
+
+	char* string = pvPortMalloc(32);
+
+	if(string != NULL)
+	{
+
+		uint32_t i = 0;
+		char c = '\0';
+		while(c != '\r' && i < 32)
+		{
+			xQueueReceive(UART_QueueReceiveHandle[target], &c, portMAX_DELAY); // fetch character from string
+			string[i++] = c;
+		}
+		string[i--] = '\0';
+	}
+	xSemaphoreGive(UART_MutexReceiveHandle[target]);
+
+	return string;
+}
+
