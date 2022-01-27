@@ -13,7 +13,9 @@ local.properties
 .recommenders
 
 # build directory
-build/
+**/build/*
+!**/build/code.elf
+!**/build/code.hex
 
 # proteus 
 **/proteus/*
