@@ -25,6 +25,8 @@ static void mcu1Task(void *p)
 		char* command =	UART_BlockReceiveString(VT);
 		UART_AsyncTransmitString(VT, command);
 
+		vPortFree(command);
+
 		//vTaskDelay(pdMS_TO_TICKS(500));
 	}
 }
