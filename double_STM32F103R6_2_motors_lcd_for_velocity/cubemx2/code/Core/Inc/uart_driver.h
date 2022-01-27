@@ -17,16 +17,10 @@ typedef struct
 } MotorCommand;
 
 
-typedef enum
-{
-	VT = 0, MCU2 = 1
-} UART_Target;
 
 extern void UART_Init();
 
-extern void UART_AsyncTransmitString(UART_Target target, const char* string);
-extern char* UART_BlockReceiveString(UART_Target target);
+extern MotorCommand UART_BlockReceiveMotorCommand();
 
-extern void UART_AsyncTransmitMotorCommand(UART_Target target, MotorCommand command);
 
 #endif /* CORE_INC_UART_DRIVER_H_ */

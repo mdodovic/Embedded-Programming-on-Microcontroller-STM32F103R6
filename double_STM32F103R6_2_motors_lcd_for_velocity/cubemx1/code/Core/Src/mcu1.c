@@ -17,6 +17,8 @@
 
 #include <string.h>
 
+static uint8_t velocity[2] = {0, 0};
+
 static void mcu1Task(void *p)
 {
 
@@ -31,19 +33,19 @@ static void mcu1Task(void *p)
 			if(strlen(command) == 3) {
 
 			} else {
-				UART_AsyncTransmitString(VT, "Operacija mora imati 2 karaktera!\r");
+				//UART_AsyncTransmitString(VT, "Operacija mora imati 2 karaktera!\r");
 				error_happened = 1;
 			}
 			if('1' <= command[0] && command[0] <= '2') {
 
 			} else {
-				UART_AsyncTransmitString(VT, "Indeks motora mora biti ili 1 ili 2!\r");
+				//UART_AsyncTransmitString(VT, "Indeks motora mora biti ili 1 ili 2!\r");
 				error_happened = 1;
 			}
 			if((command[1] == 'i' || command[1] == 'd')) {
 
 			} else {
-				UART_AsyncTransmitString(VT, "Komanda mora bili ili 'i' (ubrzavanje) ili 'd' (usporavanje)!\r");
+				//UART_AsyncTransmitString(VT, "Komanda mora bili ili 'i' (ubrzavanje) ili 'd' (usporavanje)!\r");
 				error_happened = 1;
 			}
 			if(error_happened == 1)
@@ -51,6 +53,25 @@ static void mcu1Task(void *p)
 				vPortFree(command);
 				continue;
 			}
+
+			MotorCommand mc;
+			mc.motor = command[0] - '0' - 1;
+			mc.velocity = velocity[mc.motor];
+			if(command[1] == 'i' && mc.velocity < 16)
+			{
+				velocity[mc.motor]++;
+				mc.velocity++;
+			}
+			if(command[1] == 'd' && mc.velocity > 0)
+			{
+				velocity[mc.motor]--;
+				mc.velocity--;
+			}
+
+
+
+			UART_AsyncTransmitMotorCommand(MCU2, mc);
+			vPortFree(command);
 		}
 
 	}

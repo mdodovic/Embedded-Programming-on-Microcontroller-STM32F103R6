@@ -8,7 +8,6 @@
 #ifndef CORE_INC_MCU1_H_
 #define CORE_INC_MCU1_H_
 
-
 extern void MCU1_Init();
 
 

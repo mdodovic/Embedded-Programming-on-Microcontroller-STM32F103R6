@@ -42,7 +42,7 @@ static void UART_TransmitTask(void* p)
 
 		xQueueReceive(UART_QueueTransmitHandle[target], &buffer, portMAX_DELAY); // use character from queue
 
-		HAL_UART_Transmit_IT(phuart[target], &buffer, sizeof(uint8_t));			 // transmit it to the pin TX
+		HAL_UART_Transmit_IT(phuart[target], &buffer, sizeof(uint8_t));	 // transmit it to the pin TX
 
 		ulTaskNotifyTake(pdTRUE, portMAX_DELAY); // block until it is transmitted
 
@@ -58,6 +58,12 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
 	{
 		BaseType_t woken = pdFALSE;
 		vTaskNotifyGiveFromISR(UART_TaskTransmitHandle[VT], &woken);
+		portYIELD_FROM_ISR(woken);
+	}
+	if(huart->Instance == phuart[MCU2]->Instance)
+	{
+		BaseType_t woken = pdFALSE;
+		vTaskNotifyGiveFromISR(UART_TaskTransmitHandle[MCU2], &woken);
 		portYIELD_FROM_ISR(woken);
 	}
 }
@@ -94,6 +100,8 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 		vTaskNotifyGiveFromISR(UART_TaskReceiveHandle[VT], &woken);
 		portYIELD_FROM_ISR(woken);
 	}
+
+
 }
 
 
@@ -109,9 +117,12 @@ void UART_Init()
 
 	UART_QueueReceiveHandle[VT] = xQueueCreate(128, sizeof(uint8_t));
 	UART_MutexReceiveHandle[VT] = xSemaphoreCreateMutex();
-	xTaskCreate(UART_ReceiveTask, "UART_ReceiveTask", 64, (void *) VT, 4, &UART_TaskReceiveHandle[VT]);
+	xTaskCreate(UART_ReceiveTask, "UART_ReceiveTask", 64, (void *) VT, 20, &UART_TaskReceiveHandle[VT]);
 
-
+	/* Transmit to MCU2 */
+	UART_QueueTransmitHandle[MCU2] = xQueueCreate(128, sizeof(uint8_t));
+	UART_MutexTransmitHandle[MCU2] = xSemaphoreCreateMutex();
+	xTaskCreate(UART_TransmitTask, "UART_TransmitTask", 64, (void*) MCU2, 4, &UART_TaskTransmitHandle[MCU2]);
 }
 
 
@@ -131,6 +142,18 @@ void UART_AsyncTransmitString(UART_Target target, const char* string)
 		xSemaphoreGive(UART_MutexTransmitHandle[target]);
 	}
 }
+
+void UART_AsyncTransmitMotorCommand(UART_Target target, MotorCommand command)
+{
+
+		xSemaphoreTake(UART_MutexTransmitHandle[target], portMAX_DELAY);
+
+		xQueueSendToBack(UART_QueueTransmitHandle[target], &command.motor, portMAX_DELAY);
+		xQueueSendToBack(UART_QueueTransmitHandle[target], &command.velocity, portMAX_DELAY);
+
+		xSemaphoreGive(UART_MutexTransmitHandle[target]);
+}
+
 
 /* utility: Receive */
 
@@ -157,3 +180,14 @@ char* UART_BlockReceiveString(UART_Target target)
 	return string;
 }
 
+MotorCommand UART_BlockReceiveMotorCommand(UART_Target target)
+{
+	MotorCommand mc = {0, 0};
+	xSemaphoreTake(UART_MutexTransmitHandle[target], portMAX_DELAY);
+
+	xQueueReceive(UART_QueueReceiveHandle[target], &mc.motor, portMAX_DELAY);
+	xQueueReceive(UART_QueueReceiveHandle[target], &mc.velocity, portMAX_DELAY);
+
+	xSemaphoreGive(UART_MutexTransmitHandle[target]);
+	return mc;
+}
