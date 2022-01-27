@@ -51,12 +51,12 @@ static void UART_TransmitTask(void* p)
 
 // callback after the transmission is completed
 
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
 {
 	// transmission finished: next transmission can start
 	if(huart->Instance == phuart[VT]->Instance)
 	{
-		BaseType_t woken;
+		BaseType_t woken = pdFALSE;
 		vTaskNotifyGiveFromISR(UART_TaskTransmitHandle[VT], &woken);
 		portYIELD_FROM_ISR(woken);
 	}
