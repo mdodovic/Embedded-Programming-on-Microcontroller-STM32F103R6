@@ -16,4 +16,6 @@ typedef enum
 
 extern void UART_Init();
 
+extern void UART_AsyncTransmitString(UART_Target target, const char* string);
+
 #endif /* CORE_INC_UART_DRIVER_H_ */

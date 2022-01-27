@@ -37,6 +37,8 @@ BUILD_DIR = build
 # C sources
 C_SOURCES =  \
 Core/Src/main.c \
+Core/Src/uart_driver.c \
+Core/Src/mcu1.c \
 Core/Src/freertos.c \
 Core/Src/stm32f1xx_it.c \
 Core/Src/stm32f1xx_hal_msp.c \
