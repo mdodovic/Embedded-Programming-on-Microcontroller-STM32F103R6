@@ -19,18 +19,57 @@ static void mcu1Task(void *p)
 {
 
 	LCD_CommandEnqueue(LCD_INSTRUCTION,
+						LCD_SET_CG_RAM_ADDRESS_INSTRUCTION | 0x08);
+
+	LCD_CommandEnqueue(LCD_DATA, 0x1F); // X X X X X
+	LCD_CommandEnqueue(LCD_DATA, 0x1F); // X X X X X
+	LCD_CommandEnqueue(LCD_DATA, 0x1F); // X X X X X
+	LCD_CommandEnqueue(LCD_DATA, 0x1F); // X X X X X
+	LCD_CommandEnqueue(LCD_DATA, 0x1F); // X X X X X
+	LCD_CommandEnqueue(LCD_DATA, 0x1F); // X X X X X
+	LCD_CommandEnqueue(LCD_DATA, 0x1F); // X X X X X
+
+
+	LCD_CommandEnqueue(LCD_INSTRUCTION,
 						LCD_SET_DD_RAM_ADDRESS_INSTRUCTION | 0x00); // reset ddram showing
 
-	char line1[16] = "Mikroprocesorski";
-
-	for(uint32_t i = 0; i < 16; i++)
-	{
-		LCD_CommandEnqueue(LCD_DATA, line1[i]);
-		vTaskDelay(pdMS_TO_TICKS(100));
-	}
 
 	while(1)
 	{
+		uint32_t velocity1 = htim3.Instance->CCR1;
+
+		LCD_CommandEnqueue(LCD_INSTRUCTION,
+							LCD_SET_DD_RAM_ADDRESS_INSTRUCTION | 0x00); // first row
+
+		for(uint32_t i = 0; i < 16; i++)
+		{
+			if(i < velocity1)
+			{
+				LCD_CommandEnqueue(LCD_DATA, 0x01); // read from cgram
+			}
+			else
+			{
+				LCD_CommandEnqueue(LCD_DATA, ' '); // fill with blanco
+			}
+		}
+
+		uint32_t velocity2 = htim3.Instance->CCR2;
+
+		LCD_CommandEnqueue(LCD_INSTRUCTION,
+							LCD_SET_DD_RAM_ADDRESS_INSTRUCTION | 0x40); // first row
+
+		for(uint32_t i = 0; i < 16; i++)
+		{
+			if(i < velocity2)
+			{
+				LCD_CommandEnqueue(LCD_DATA, 0x01); // read from cgram
+			}
+			else
+			{
+				LCD_CommandEnqueue(LCD_DATA, ' '); // fill with blanco
+			}
+		}
+
 
 	}
 }
