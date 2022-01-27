@@ -19,6 +19,10 @@ build/
 **/proteus/*
 !**/proteus/proteus.pdsprj
 
+# cubemx
+**/code/Drivers/
+**/code/Middlewares/
+
 # External tool builders
 .externalToolBuilders/
 
