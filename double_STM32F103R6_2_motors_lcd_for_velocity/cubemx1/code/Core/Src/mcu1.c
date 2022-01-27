@@ -15,19 +15,44 @@
 #include "queue.h"
 #include "uart_driver.h"
 
+#include <string.h>
 
 static void mcu1Task(void *p)
 {
 
 	while(1)
 	{
-		UART_AsyncTransmitString(VT, "MPIS\r");
+		UART_AsyncTransmitString(VT, "Unesite operaciju u formatu <#motor><komanda>: ");
 		char* command =	UART_BlockReceiveString(VT);
-		UART_AsyncTransmitString(VT, command);
 
-		vPortFree(command);
+		if(command != NULL)
+		{
+			uint8_t error_happened = 0;
+			if(strlen(command) == 3) {
 
-		//vTaskDelay(pdMS_TO_TICKS(500));
+			} else {
+				UART_AsyncTransmitString(VT, "Operacija mora imati 2 karaktera!\r");
+				error_happened = 1;
+			}
+			if('1' <= command[0] && command[0] <= '2') {
+
+			} else {
+				UART_AsyncTransmitString(VT, "Indeks motora mora biti ili 1 ili 2!\r");
+				error_happened = 1;
+			}
+			if((command[1] == 'i' || command[1] == 'd')) {
+
+			} else {
+				UART_AsyncTransmitString(VT, "Komanda mora bili ili 'i' (ubrzavanje) ili 'd' (usporavanje)!\r");
+				error_happened = 1;
+			}
+			if(error_happened == 1)
+			{
+				vPortFree(command);
+				continue;
+			}
+		}
+
 	}
 }
 
