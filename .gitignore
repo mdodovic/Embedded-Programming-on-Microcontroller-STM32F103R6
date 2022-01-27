@@ -20,6 +20,7 @@ build/
 !**/proteus/proteus.pdsprj
 
 # cubemx
+**/code/.mxproject
 **/code/Drivers/
 **/code/Middlewares/
 
