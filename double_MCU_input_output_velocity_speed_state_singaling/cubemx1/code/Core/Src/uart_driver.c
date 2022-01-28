@@ -16,6 +16,8 @@
 
 #include "usart.h"
 
+UART_HandleTypeDef *phuart[2] = { &huart1, &huart2 };
+
 QueueHandle_t UART_TransmitQueueHandle[2];
 SemaphoreHandle_t UART_TransmitMutexHandle[2];
 TaskHandle_t UART_TransmitTaskHandle[2];
@@ -32,7 +34,7 @@ static void UART_TransmitTask(void* p)
 	{
 		xQueueReceive(UART_TransmitQueueHandle[target], &buffer, portMAX_DELAY);
 
-		HAL_UART_Transmit_IT(&huart1, &buffer, sizeof(uint8_t));
+		HAL_UART_Transmit_IT(phuart[target], &buffer, sizeof(uint8_t));
 
 		ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
 	}
@@ -41,7 +43,7 @@ static void UART_TransmitTask(void* p)
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
 {
 	BaseType_t woken = pdFALSE;
-	if(huart->Instance == huart1.Instance)
+	if(huart->Instance == phuart[VT]->Instance)
 	{
 		vTaskNotifyGiveFromISR(UART_TransmitTaskHandle[VT], &woken);
 	}
@@ -76,7 +78,7 @@ void UART_ReceiveTask(void* p)
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
 	BaseType_t woken = pdFALSE;
-	if(huart->Instance == huart1.Instance)
+	if(huart->Instance == phuart[VT]->Instance)
 	{
 		vTaskNotifyGiveFromISR(UART_ReceiveTaskHandle[VT], &woken);
 	}
@@ -99,11 +101,23 @@ void UART_Init()
 	UART_ReceiveMutexHandle[VT] = xSemaphoreCreateMutex();
 	xTaskCreate(UART_ReceiveTask, "UART_ReceiveTask", 64, (void *) VT, 20, &UART_ReceiveTaskHandle[VT]);
 
-	// MCU2 - Receive
+	// MCU2 - Transmit
+	UART_TransmitQueueHandle[MCU2] = xQueueCreate(64, sizeof(uint8_t));
+	UART_TransmitMutexHandle[MCU2] = xSemaphoreCreateMutex();
+	xTaskCreate(UART_TransmitTask, "UART_TransmitTask", 64, (void *) MCU2, 4, &UART_TransmitTaskHandle[MCU2]);
 
-	// MCU2 - Receive
+
 }
 
+void UART_AsyncTransmitxMotorCommand(UART_Target target, MotorCommand motorCommand)
+{
+	xSemaphoreTake(UART_TransmitMutexHandle[target], portMAX_DELAY);
+
+	xQueueSendToBack(UART_TransmitQueueHandle[target], &motorCommand.motor,	portMAX_DELAY);
+	xQueueSendToBack(UART_TransmitQueueHandle[target], &motorCommand.velocity, portMAX_DELAY);
+
+	xSemaphoreGive(UART_TransmitMutexHandle[target]);
+}
 
 void UART_AsyncTransmitString(UART_Target target, const char* s)
 {

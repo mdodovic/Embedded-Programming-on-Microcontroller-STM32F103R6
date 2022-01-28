@@ -13,7 +13,7 @@
 #include "tim.h"
 
 #include "lcd_driver.h"
-
+#include "usart_driver.h"
 
 
 void MCU_Task(void* p)
@@ -28,35 +28,38 @@ void MCU_Task(void* p)
 	LCD_CommandEnqueue(LCD_DATA, 0x1F); // XXXXX
 	LCD_CommandEnqueue(LCD_DATA, 0x1F); // XXXXX
 
+	htim3.Instance->CCR1 = 0;
+	htim3.Instance->CCR2 = 0;
 
 	while(1)
 	{
-
-		uint32_t vel = htim3.Instance->CCR1;
-		LCD_CommandEnqueue(LCD_INSTRUCTION, LCD_SET_DD_RAM_ADDRESS_INSTRUCTION | 0x00);
-
-		for(uint32_t i = 0; i < 16; i++)
+		MotorCommand motorCommand = UART_BlockReceiveMotorCommand();
+		switch (motorCommand.motor)
 		{
-			if(i < vel){
+		case 1:
+			htim3.Instance->CCR1 = motorCommand.velocity;
+			LCD_CommandEnqueue(LCD_INSTRUCTION,
+			LCD_SET_DD_RAM_ADDRESS_INSTRUCTION | 0x00);
+			break;
+		case 2:
+			htim3.Instance->CCR2 = motorCommand.velocity;
+			LCD_CommandEnqueue(LCD_INSTRUCTION,
+			LCD_SET_DD_RAM_ADDRESS_INSTRUCTION | 0x40);
+			break;
+		}
+
+		for (uint32_t i = 0; i < 16; i++)
+		{
+			if (i < motorCommand.velocity)
+			{
 				LCD_CommandEnqueue(LCD_DATA, 0x01);
-			} else {
+			}
+			else
+			{
 				LCD_CommandEnqueue(LCD_DATA, ' ');
 			}
 		}
 
-		vel = htim3.Instance->CCR2;
-		LCD_CommandEnqueue(LCD_INSTRUCTION, LCD_SET_DD_RAM_ADDRESS_INSTRUCTION | 0x40);
-
-		for(uint32_t i = 0; i < 16; i++)
-		{
-			if(i < vel){
-				LCD_CommandEnqueue(LCD_DATA, 0x01);
-			} else {
-				LCD_CommandEnqueue(LCD_DATA, ' ');
-			}
-		}
-
-		vTaskDelay(pdMS_TO_TICKS(1000));
 	}
 
 }
@@ -65,6 +68,7 @@ void MCU2_Init()
 {
 
 	LCD_Init();
+	UART_Init();
 
 	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
 	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2);

@@ -15,6 +15,7 @@ extern void MCU2_Init();
  * task -> priority
  * MCU_Task -> 5
  * LCD_Task -> 2
+ * UART_ReceiveTask -> 20
  */
 
 

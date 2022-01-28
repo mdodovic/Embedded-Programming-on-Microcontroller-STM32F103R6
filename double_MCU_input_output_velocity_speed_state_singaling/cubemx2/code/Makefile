@@ -39,6 +39,7 @@ C_SOURCES =  \
 Core/Src/main.c \
 Core/Src/lcd_driver.c \
 Core/Src/mcu2.c \
+Core/Src/usart_driver.c \
 Core/Src/freertos.c \
 Core/Src/stm32f1xx_it.c \
 Core/Src/stm32f1xx_hal_msp.c \

@@ -7,38 +7,58 @@
 
 #include "mcu1.h"
 
+#include <string.h>
+#include <stdlib.h>
+
 #include "uart_driver.h"
 
 #include "FreeRTOS.h"
 #include "task.h"
 
+uint8_t velocity[2] = { 0, 0 };
+
 void MCU1_Task(void* p)
 {
 
-	UART_AsyncTransmitString(VT, "MIPS");
-	UART_AsyncTransmitCharacter(VT, '_');
-	UART_AsyncTransmitDecimal(VT, 2021);
-	UART_AsyncTransmitCharacter(VT, '\r');
-
-	char* s = UART_BlockReceiveString(VT);
-	UART_AsyncTransmitString(VT, s);
-	vPortFree(s);
-	UART_AsyncTransmitCharacter(VT, '\r');
-
-	char c = UART_BlockReceiveCharacter(VT);
-	UART_AsyncTransmitCharacter(VT, c);
-	UART_AsyncTransmitCharacter(VT, '\r');
-
-	uint32_t d = UART_BlockReceiveDecimal(VT);
-	UART_AsyncTransmitDecimal(VT, 1234);
-	UART_AsyncTransmitCharacter(VT, '\r');
-	UART_AsyncTransmitDecimal(VT, d);
-	UART_AsyncTransmitCharacter(VT, '\r');
-
-	while(1)
+	while (1)
 	{
-		UART_AsyncTransmitString(VT, "MIPS");
-		vTaskDelay(pdMS_TO_TICKS(1000));
+		UART_AsyncTransmitString(VT, "Unesite komandu:");
+		char *input = UART_BlockReceiveString(VT);
+
+		if (input != NULL)
+		{
+			if (strlen(input) == 2 && '1' <= input[0] && input[0] <= '2'
+					&& (input[1] == 'd' || input[1] == 'i'))
+			{
+				uint8_t motor = input[0] - '0';
+				switch (input[1])
+				{
+				case 'd':
+					// decrease
+					if (velocity[motor - 1] > 0)
+					{
+						velocity[motor - 1]--;
+					}
+					break;
+				case 'i':
+					// increase
+					if (velocity[motor - 1] < 16)
+					{
+						velocity[motor - 1]++;
+					}
+					break;
+				}
+				MotorCommand motorCommand =
+				{ .motor = motor, .velocity = velocity[motor - 1] };
+				UART_AsyncTransmitxMotorCommand(MCU2, motorCommand);
+			}
+			else
+			{
+				UART_AsyncTransmitString(VT, "Pogresan format komande!\r");
+			}
+
+			vPortFree(input);
+		}
 	}
 
 }

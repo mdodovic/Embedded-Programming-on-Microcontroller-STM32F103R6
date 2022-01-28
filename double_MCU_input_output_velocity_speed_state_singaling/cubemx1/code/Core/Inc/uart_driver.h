@@ -17,10 +17,18 @@ typedef enum
 	VT = 0, MCU2 = 1
 } UART_Target;
 
+typedef struct
+{
+	uint8_t motor;
+	uint8_t velocity;
+} MotorCommand;
+
 
 extern void UART_AsyncTransmitString(UART_Target, const char*);
 extern void UART_AsyncTransmitCharacter(UART_Target, char);
 extern void UART_AsyncTransmitDecimal(UART_Target, uint32_t);
+
+extern void UART_AsyncTransmitxMotorCommand(UART_Target, MotorCommand);
 
 extern char* UART_BlockReceiveString(UART_Target);
 extern char UART_BlockReceiveCharacter(UART_Target);
