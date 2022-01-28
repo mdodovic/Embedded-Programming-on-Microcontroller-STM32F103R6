@@ -11,4 +11,6 @@
 
 extern float TEMP_GetCurrentTemparatureValue();
 
+extern void TEMP_Init();
+
 #endif /* CORE_INC_TEMPARATURE_DRIVER_H_ */

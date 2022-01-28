@@ -20,6 +20,7 @@ typedef enum
  * MCU_Task -> 5
  * UART_TransmitTask -> 4
  * LCD_Task -> 2
+ * TEMP_Task -> 2
  */
 
 #endif /* CORE_INC_MCU_H_ */

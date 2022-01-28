@@ -128,7 +128,7 @@ void MCU_Init()
 	UART_Init();
 	LCD_Init();
 	MOTOR_Init();
-
+	TEMP_Init();
 	xTaskCreate(MCU_Task, "MCU_Task", 128, NULL, 5, NULL);
 
 }
