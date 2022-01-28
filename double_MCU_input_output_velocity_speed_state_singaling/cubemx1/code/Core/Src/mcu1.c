@@ -28,7 +28,7 @@ void MCU1_Task(void* p)
 		if (input != NULL)
 		{
 			if (strlen(input) == 2 && '1' <= input[0] && input[0] <= '2'
-					&& (input[1] == 'd' || input[1] == 'i'))
+					&& (input[1] == 'd' || input[1] == 'i' || input[1] == '0'))
 			{
 				uint8_t motor = input[0] - '0';
 				switch (input[1])
@@ -46,6 +46,10 @@ void MCU1_Task(void* p)
 					{
 						velocity[motor - 1]++;
 					}
+					break;
+				case '0':
+					// turn off
+					velocity[motor - 1] = 0;
 					break;
 				}
 				MotorCommand motorCommand =
