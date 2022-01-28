@@ -14,6 +14,7 @@
 
 #include "FreeRTOS.h"
 #include "task.h"
+#include "keypad_driver.h"
 
 uint8_t velocity[2] = { 0, 0 };
 
@@ -71,7 +72,7 @@ void MCU1_Task(void* p)
 void MCU1_Init()
 {
 	UART_Init();
-
+	KEY_Init();
 	xTaskCreate(MCU1_Task, "mcu", 64, NULL, 5, NULL);
 
 }

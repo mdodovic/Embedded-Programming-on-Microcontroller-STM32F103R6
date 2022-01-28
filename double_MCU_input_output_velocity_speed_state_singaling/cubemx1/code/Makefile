@@ -40,6 +40,7 @@ Core/Src/main.c \
 Core/Src/freertos.c \
 Core/Src/mcu1.c \
 Core/Src/uart_driver.c \
+Core/Src/keypad_driver.c \
 Core/Src/stm32f1xx_it.c \
 Core/Src/stm32f1xx_hal_msp.c \
 Core/Src/stm32f1xx_hal_timebase_tim.c \
