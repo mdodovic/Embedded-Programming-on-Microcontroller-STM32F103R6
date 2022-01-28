@@ -29,8 +29,10 @@ void MCU1_Task(void* p)
 	UART_AsyncTransmitCharacter(VT, c);
 	UART_AsyncTransmitCharacter(VT, '\r');
 
-//	uint32_t d = UART_BlockReceiveDecimal(VT);
-//	UART_AsyncTransmitDecimal(VT, d);
+	uint32_t d = UART_BlockReceiveDecimal(VT);
+	UART_AsyncTransmitDecimal(VT, 1234);
+	UART_AsyncTransmitCharacter(VT, '\r');
+	UART_AsyncTransmitDecimal(VT, d);
 	UART_AsyncTransmitCharacter(VT, '\r');
 
 	while(1)

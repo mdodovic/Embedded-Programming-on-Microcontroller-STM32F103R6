@@ -196,7 +196,10 @@ uint32_t UART_BlockReceiveDecimal(UART_Target target)
 	while(c != '\r')
 	{
 		xQueueReceive(UART_ReceiveQueueHandle[target], &c, portMAX_DELAY);
-		d = d * 10 + c - '0';
+		if (c >= '0' && c <= '9')
+		{
+			d = d * 10 + (c - '0');
+		}
 	}
 
 	xSemaphoreGive(UART_ReceiveMutexHandle[target]);
