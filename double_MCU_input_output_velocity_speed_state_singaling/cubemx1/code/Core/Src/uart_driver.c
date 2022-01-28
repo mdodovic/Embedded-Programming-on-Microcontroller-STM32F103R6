@@ -90,12 +90,27 @@ void UART_AsyncTransmitCharacter(UART_Target target, char c)
 {
 	xSemaphoreTake(UART_TransmitMutexHandle[target], portMAX_DELAY);
 
+	xQueueSendToBack(UART_TransmitQueueHandle[target], &c, portMAX_DELAY);
+
 	xSemaphoreGive(UART_TransmitMutexHandle[target]);
 
 }
 void UART_AsyncTransmitDecimal(UART_Target target, uint32_t d)
 {
 	xSemaphoreTake(UART_TransmitMutexHandle[target], portMAX_DELAY);
+
+	char s[32];
+	int i = 32;
+	while(i >= 0 && d > 0)
+	{
+		s[--i] = d % 10 + '0';
+		d /= 10;
+	}
+
+	for(uint32_t j = i; j < 32; j++)
+	{
+		xQueueSendToBack(UART_TransmitQueueHandle[target], s + j, portMAX_DELAY);
+	}
 
 	xSemaphoreGive(UART_TransmitMutexHandle[target]);
 
