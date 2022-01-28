@@ -24,8 +24,8 @@ void MCU1_Task(void* p)
 //	UART_AsyncTransmitString(VT, "MIPS");
 	UART_AsyncTransmitCharacter(VT, '\r');
 
-//	char c = UART_BlockReceiveCharacter(VT);
-//	UART_AsyncTransmitCharacter(VT, c);
+	char c = UART_BlockReceiveCharacter(VT);
+	UART_AsyncTransmitCharacter(VT, c);
 	UART_AsyncTransmitCharacter(VT, '\r');
 
 //	uint32_t d = UART_BlockReceiveDecimal(VT);

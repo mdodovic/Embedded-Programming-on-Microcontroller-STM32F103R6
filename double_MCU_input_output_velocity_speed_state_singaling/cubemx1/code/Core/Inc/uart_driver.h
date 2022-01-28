@@ -22,19 +22,8 @@ extern void UART_AsyncTransmitString(UART_Target, const char*);
 extern void UART_AsyncTransmitCharacter(UART_Target, char);
 extern void UART_AsyncTransmitDecimal(UART_Target, uint32_t);
 
-//	UART_AsyncTransmitCharacter(VT, '\r');
-//
-//	char* s = UART_BlockReceiveString(VT);
-//	UART_AsyncTransmitString(VT, "MIPS");
-//	UART_AsyncTransmitCharacter(VT, '\r');
-//
-//	char c = UART_BlockReceiveCharacter(VT);
-//	UART_AsyncTransmitCharacter(VT, c);
-//	UART_AsyncTransmitCharacter(VT, '\r');
-//
-//	uint32_t d = UART_BlockReceiveDecimal(VT);
-//	UART_AsyncTransmitDecimal(VT, d);
-//	UART_AsyncTransmitCharacter(VT, '\r');
-
+extern char* UART_BlockReceiveString(UART_Target);
+extern char UART_BlockReceiveCharacter(UART_Target);
+extern uint32_t UART_BlockReceiveDecimal(UART_Target);
 
 #endif /* CORE_INC_UART_DRIVER_H_ */

@@ -57,6 +57,35 @@ QueueHandle_t UART_ReceiveQueueHandle[2];
 SemaphoreHandle_t UART_ReceiveMutexHandle[2];
 TaskHandle_t UART_ReceiveTaskHandle[2];
 
+void UART_ReceiveTask(void* p)
+{
+	UART_Target target = (UART_Target) p;
+
+	uint8_t buffer;
+
+	while(1)
+	{
+		HAL_UART_Receive_IT(&huart1, &buffer, sizeof(uint8_t));
+
+		ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+
+		xQueueSendToBack(UART_ReceiveQueueHandle[target], &buffer, portMAX_DELAY);
+	}
+}
+
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+	BaseType_t woken = pdFALSE;
+	if(huart->Instance == huart1.Instance)
+	{
+		vTaskNotifyGiveFromISR(UART_ReceiveTaskHandle[VT], &woken);
+	}
+	else {
+		vTaskNotifyGiveFromISR(UART_ReceiveTaskHandle[MCU2], &woken);
+	}
+	portYIELD_FROM_ISR(woken);
+}
+
 
 void UART_Init()
 {
@@ -65,8 +94,13 @@ void UART_Init()
 	UART_TransmitMutexHandle[VT] = xSemaphoreCreateMutex();
 	xTaskCreate(UART_TransmitTask, "UART_TransmitTask", 64, (void *) VT, 4, &UART_TransmitTaskHandle[VT]);
 
+	// VT - Receive
+	UART_ReceiveQueueHandle[VT] = xQueueCreate(64, sizeof(uint32_t));
+	UART_ReceiveMutexHandle[VT] = xSemaphoreCreateMutex();
+	xTaskCreate(UART_ReceiveTask, "UART_ReceiveTask", 64, (void *) VT, 4, &UART_ReceiveTaskHandle[VT]);
+
 	// MCU2 - Receive
-	// VT - Transmit
+
 	// MCU2 - Receive
 }
 
@@ -114,6 +148,27 @@ void UART_AsyncTransmitDecimal(UART_Target target, uint32_t d)
 
 	xSemaphoreGive(UART_TransmitMutexHandle[target]);
 
+}
+
+char* UART_BlockReceiveString(UART_Target target)
+{
+	return NULL;
+}
+
+char UART_BlockReceiveCharacter(UART_Target target)
+{
+	xSemaphoreTake(UART_ReceiveMutexHandle[target], portMAX_DELAY);
+
+	char c;
+	xQueueReceive(UART_ReceiveQueueHandle[target], &c, portMAX_DELAY);
+
+	xSemaphoreGive(UART_ReceiveMutexHandle[target]);
+	return c;
+}
+
+uint32_t UART_BlockReceiveDecimal(UART_Target targer)
+{
+	return 0;
 }
 
 
