@@ -20,8 +20,9 @@ void MCU1_Task(void* p)
 	UART_AsyncTransmitDecimal(VT, 2021);
 	UART_AsyncTransmitCharacter(VT, '\r');
 
-//	char* s = UART_BlockReceiveString(VT);
-//	UART_AsyncTransmitString(VT, "MIPS");
+	char* s = UART_BlockReceiveString(VT);
+	UART_AsyncTransmitString(VT, s);
+	vPortFree(s);
 	UART_AsyncTransmitCharacter(VT, '\r');
 
 	char c = UART_BlockReceiveCharacter(VT);

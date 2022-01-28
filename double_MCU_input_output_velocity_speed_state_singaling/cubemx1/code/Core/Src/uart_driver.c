@@ -90,14 +90,14 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 void UART_Init()
 {
 	// VT - Transmit
-	UART_TransmitQueueHandle[VT] = xQueueCreate(64, sizeof(uint32_t));
+	UART_TransmitQueueHandle[VT] = xQueueCreate(64, sizeof(uint8_t));
 	UART_TransmitMutexHandle[VT] = xSemaphoreCreateMutex();
 	xTaskCreate(UART_TransmitTask, "UART_TransmitTask", 64, (void *) VT, 4, &UART_TransmitTaskHandle[VT]);
 
 	// VT - Receive
-	UART_ReceiveQueueHandle[VT] = xQueueCreate(64, sizeof(uint32_t));
+	UART_ReceiveQueueHandle[VT] = xQueueCreate(64, sizeof(uint8_t));
 	UART_ReceiveMutexHandle[VT] = xSemaphoreCreateMutex();
-	xTaskCreate(UART_ReceiveTask, "UART_ReceiveTask", 64, (void *) VT, 4, &UART_ReceiveTaskHandle[VT]);
+	xTaskCreate(UART_ReceiveTask, "UART_ReceiveTask", 64, (void *) VT, 20, &UART_ReceiveTaskHandle[VT]);
 
 	// MCU2 - Receive
 
@@ -152,7 +152,27 @@ void UART_AsyncTransmitDecimal(UART_Target target, uint32_t d)
 
 char* UART_BlockReceiveString(UART_Target target)
 {
-	return NULL;
+
+	xSemaphoreTake(UART_ReceiveMutexHandle[target], portMAX_DELAY);
+
+	char* s = pvPortMalloc(32);
+
+	if(s != NULL)
+	{
+
+		char c = '\0';
+		uint32_t i = 0;
+		while(c != '\r' && i < 32)
+		{
+			xQueueReceive(UART_ReceiveQueueHandle[target], &c, portMAX_DELAY);
+			s[i++] = c;
+		}
+		s[--i] = '\0';
+	}
+
+	xSemaphoreGive(UART_ReceiveMutexHandle[target]);
+
+	return s;
 }
 
 char UART_BlockReceiveCharacter(UART_Target target)
@@ -166,9 +186,21 @@ char UART_BlockReceiveCharacter(UART_Target target)
 	return c;
 }
 
-uint32_t UART_BlockReceiveDecimal(UART_Target targer)
+uint32_t UART_BlockReceiveDecimal(UART_Target target)
 {
-	return 0;
+	xSemaphoreTake(UART_ReceiveMutexHandle[target], portMAX_DELAY);
+
+	uint32_t d = 0;
+
+	char c = '\0';
+	while(c != '\r')
+	{
+		xQueueReceive(UART_ReceiveQueueHandle[target], &c, portMAX_DELAY);
+		d = d * 10 + c - '0';
+	}
+
+	xSemaphoreGive(UART_ReceiveMutexHandle[target]);
+	return d;
 }
 
 
