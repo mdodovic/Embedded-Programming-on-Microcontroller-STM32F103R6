@@ -12,6 +12,7 @@
 #include "timers.h"
 
 #include "uart_driver.h"
+#include "mcu1.h"
 
 #include "gpio.h"
 
@@ -26,6 +27,11 @@ static char KEY_Map[4][3] = {
 		{'7', '8', '9'},
 		{'*', '0', '#'},
 };
+
+uint8_t number = 0;
+
+static uint8_t velocityKeyboard = -1;
+static uint8_t motorKeyboard = 0;
 
 void KEY_Task(void* p)
 {
@@ -47,7 +53,35 @@ void KEY_Task(void* p)
 					{
 						KEY_PreviouslyReleased = 0;
 						xTimerStart(KEY_TimerHandle, portMAX_DELAY);
-						UART_AsyncTransmitCharacter(VT, KEY_Map[row][column]);
+
+						if(KEY_Map[row][column] == '#')
+						{
+							motorKeyboard = 1;
+							velocityKeyboard = 14;
+
+							MotorCommand motorCommand =
+							{ .motor = motorKeyboard, .velocity = velocityKeyboard};
+							UART_AsyncTransmitxMotorCommand(MCU2, motorCommand);
+
+							velocity[motorKeyboard - 1] = velocityKeyboard;
+							motorKeyboard = -1;
+							velocityKeyboard = 0;
+						}
+						else
+						{
+							uint8_t number = KEY_Map[row][column] - '0';
+							UART_AsyncTransmitDecimal(VT, number);
+
+							if(motorKeyboard == -1)
+							{
+								motorKeyboard = number;
+							} else
+							{
+								velocityKeyboard = velocityKeyboard * 10 + number;
+							}
+
+						}
+
 					}
 				}
 			}

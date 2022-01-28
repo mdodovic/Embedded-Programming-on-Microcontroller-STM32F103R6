@@ -8,9 +8,10 @@
 #ifndef CORE_INC_MCU1_H_
 #define CORE_INC_MCU1_H_
 
+#include <stdint.h>
 
 extern void MCU1_Init();
-
+extern uint8_t velocity[2];
 
 /*
  * task -> priority
