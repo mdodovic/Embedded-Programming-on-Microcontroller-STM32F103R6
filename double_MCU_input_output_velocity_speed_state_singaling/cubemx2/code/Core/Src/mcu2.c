@@ -17,12 +17,13 @@
 void MCU_Task(void* p)
 {
 
-	LCD_CommandEnqueue(LCD_INSTRUCTION, LCD_SET_DD_RAM_ADDRESS_INSTRUCTION | 0x40);
-
-	LCD_CommandEnqueue(LCD_DATA, 'a');
 
 	while(1)
 	{
+		LCD_CommandEnqueue(LCD_INSTRUCTION, LCD_SET_DD_RAM_ADDRESS_INSTRUCTION | 0x40);
+
+		LCD_CommandEnqueue(LCD_DATA, 'a');
+
 		vTaskDelay(pdMS_TO_TICKS(1000));
 	}
 

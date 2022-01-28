@@ -14,12 +14,14 @@
 
 #include "gpio.h"
 
+#define LCD_ENABLE_BIT 0x40
+
 void LCD_Write(LCD_CommandReg reg, LCD_CommandVal val)
 {
-	GPIOC->ODR = ((reg & 0x01) << 0x05) | (val & 0x0F);
-	GPIOC->ODR |= 0x40;
+	GPIOC->ODR = ((reg & 0x01) << 5) | (val & 0x0F);
+	GPIOC->ODR |= LCD_ENABLE_BIT;
 
-	GPIOC->ODR &= ~(0x40);
+	GPIOC->ODR &= ~LCD_ENABLE_BIT;
 
 }
 
@@ -33,9 +35,8 @@ void LCD_CommandInitiate(LCD_CommandReg reg, LCD_CommandVal val)
 TaskHandle_t LCD_TaskHandle;
 QueueHandle_t LCD_QueueHandle;
 
-void LCD_Task(void* p)
+void LCD_Task(void *parameter)
 {
-
 	vTaskDelay(pdMS_TO_TICKS(20));
 
 	LCD_Write(LCD_INSTRUCTION, (LCD_FUNCTION_SET_INSTRUCTION |
@@ -56,7 +57,7 @@ void LCD_Task(void* p)
 											LCD_ENTRY_MODE_INC_ADR |
 											LCD_ENTRY_MODE_SHIFT_OFF));
 
-	LCD_Write(LCD_INSTRUCTION, LCD_RETURN_HOME_INSTRUCTION);
+	LCD_CommandInitiate(LCD_INSTRUCTION, LCD_RETURN_HOME_INSTRUCTION);
 
 	LCD_Command cmd;
 	while(1)
