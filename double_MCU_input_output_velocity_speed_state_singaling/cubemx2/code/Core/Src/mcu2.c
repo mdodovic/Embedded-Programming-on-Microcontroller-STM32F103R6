@@ -16,7 +16,21 @@
 
 void MCU_Task(void* p)
 {
+	LCD_CommandEnqueue(LCD_INSTRUCTION, LCD_SET_CG_RAM_ADDRESS_INSTRUCTION | 0x08);
 
+	LCD_CommandEnqueue(LCD_DATA, 0x1F); // XXXXX
+	LCD_CommandEnqueue(LCD_DATA, 0x1F); // XXXXX
+	LCD_CommandEnqueue(LCD_DATA, 0x1F); // XXXXX
+	LCD_CommandEnqueue(LCD_DATA, 0x1F); // XXXXX
+	LCD_CommandEnqueue(LCD_DATA, 0x1F); // XXXXX
+	LCD_CommandEnqueue(LCD_DATA, 0x1F); // XXXXX
+	LCD_CommandEnqueue(LCD_DATA, 0x1F); // XXXXX
+
+	LCD_CommandEnqueue(LCD_INSTRUCTION, LCD_SET_DD_RAM_ADDRESS_INSTRUCTION | 0x01);
+
+	LCD_CommandEnqueue(LCD_DATA, 0x01);
+	LCD_CommandEnqueue(LCD_DATA, 0x01);
+	LCD_CommandEnqueue(LCD_DATA, 0x01);
 
 	while(1)
 	{
