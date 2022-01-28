@@ -23,7 +23,8 @@ static char current_temparature_text[4];
 
 void MCU_Task(void* p)
 {
-	const char temparature[] = "Temparatura: ";
+
+	const char temparature[] = "Temparatura: 27C";
 
 	// LCD
 	LCD_CommandEnqueue(LCD_INSTRUCTION, LCD_SET_DD_RAM_ADDRESS_INSTRUCTION | 0x00); // set cursor to the row start
@@ -42,13 +43,35 @@ void MCU_Task(void* p)
 		current_temparature = TEMP_GetCurrentTemparatureValue();
 		itoa(current_temparature, current_temparature_text, 10);
 
+		// process temparature
+
+
+
+		// write new value
+
+		// LCD
+		LCD_CommandEnqueue(LCD_INSTRUCTION, LCD_SET_DD_RAM_ADDRESS_INSTRUCTION | 0x0D); // set cursor to the number position (= 14 == 0xd)
+		for(uint32_t i = 0; i < strlen(current_temparature_text); i++)
+		{
+			LCD_CommandEnqueue(LCD_DATA, current_temparature_text[i]);
+		}
+
+		// Terminal
 		UART_AsyncTransmitString(current_temparature_text);
 
 
-		current_temparature = TEMP_GetCurrentTemparatureValue();
-	//	UART_AsyncTransmitString("MIPS\r");
 		vTaskDelay(pdMS_TO_TICKS(200));
 
+
+		// prepare for next value show (clear on display and on terminal)
+
+		// LCD
+		LCD_CommandEnqueue(LCD_INSTRUCTION, LCD_SET_DD_RAM_ADDRESS_INSTRUCTION | 0x0D); // set cursor to the number position (= 14 == 0xd)
+		for(uint32_t i = 0; i < strlen(current_temparature_text); i++)
+		{
+			LCD_CommandEnqueue(LCD_DATA, ' ');
+		}
+		// Terminal
 		for(uint32_t i = 0; i < strlen(current_temparature_text); i++)
 		{
 			UART_AsyncTransmitString("\b");
