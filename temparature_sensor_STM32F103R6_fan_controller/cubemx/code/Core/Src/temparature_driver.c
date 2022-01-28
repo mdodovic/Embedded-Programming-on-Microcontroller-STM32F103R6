@@ -8,12 +8,12 @@
 #include "temparature_driver.h"
 #include <stdint.h>
 
-float current_temparature = 25.0;
+float current_temparature = 45.0;
 
 float TEMP_GetCurrentTemparatureValue()
 {
 
-	current_temparature += 0.5;
+	current_temparature -= 0.5;
 
 	return current_temparature;
 }

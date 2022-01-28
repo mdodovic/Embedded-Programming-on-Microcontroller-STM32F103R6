@@ -10,6 +10,11 @@
 
 extern void MCU_Init();
 
+typedef enum
+{
+	TURNED_OFF, SLOW, FAST
+} FanState;
+
 /*
  * Tasks -> priority
  * MCU_Task -> 5

@@ -15,10 +15,12 @@
 #include "uart_driver.h"
 #include "temparature_driver.h"
 #include "lcd_driver.h"
-
+#include "motor_driver.h"
 
 static uint32_t current_temparature;
 static char current_temparature_text[4];
+
+FanState fanState = TURNED_OFF;
 
 
 void MCU_Task(void* p)
@@ -60,8 +62,30 @@ void MCU_Task(void* p)
 		itoa(current_temparature, current_temparature_text, 10);
 
 		// process temparature
+		FanState desiredFanState;
+		if(current_temparature < 30)
+		{
+			desiredFanState = TURNED_OFF;
+		}
+		else if(current_temparature < 35)
+		{
+			desiredFanState = SLOW;
+		} else
+		{
+			desiredFanState = FAST;
+		}
 
-
+		for(uint32_t i = 0; i < abs(fanState - desiredFanState); i++)
+		{
+			if(desiredFanState > fanState)
+			{
+				MOTOR_SpeedIncrease();
+			} else
+			{
+				MOTOR_SpeedDecrease();
+			}
+		}
+		fanState = desiredFanState;
 
 		// write new value
 
@@ -103,7 +127,7 @@ void MCU_Init()
 {
 	UART_Init();
 	LCD_Init();
-
+	MOTOR_Init();
 
 	xTaskCreate(MCU_Task, "MCU_Task", 128, NULL, 5, NULL);
 
