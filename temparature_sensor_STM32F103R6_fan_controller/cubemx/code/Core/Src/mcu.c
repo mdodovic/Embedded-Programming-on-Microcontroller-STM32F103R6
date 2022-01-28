@@ -24,7 +24,23 @@ static char current_temparature_text[4];
 void MCU_Task(void* p)
 {
 
-	const char temparature[] = "Temparatura: 27C";
+	// Create celsius sign
+
+	LCD_CommandEnqueue(LCD_INSTRUCTION, LCD_SET_CG_RAM_ADDRESS_INSTRUCTION | 0x38); // set cursor to the 111|000 symbol (address for this character)
+
+	LCD_CommandEnqueue(LCD_DATA, 0x18); // X X _ _ _
+	LCD_CommandEnqueue(LCD_DATA, 0x18); // X X _ _ _
+	LCD_CommandEnqueue(LCD_DATA, 0x06); // _ _ X X _
+	LCD_CommandEnqueue(LCD_DATA, 0x08); // _ X _ _ _
+	LCD_CommandEnqueue(LCD_DATA, 0x08); // _ X _ _ _
+	LCD_CommandEnqueue(LCD_DATA, 0x08); // _ X _ _ _
+	LCD_CommandEnqueue(LCD_DATA, 0x06); // _ _ X X _
+
+	LCD_CommandEnqueue(LCD_INSTRUCTION, LCD_SET_DD_RAM_ADDRESS_INSTRUCTION | 0x0F); // set cursor to the celsius position
+	LCD_CommandEnqueue(LCD_DATA, 0x07); // read from 111 address
+
+
+	const char temparature[] = "Temparatura: ";
 
 	// LCD
 	LCD_CommandEnqueue(LCD_INSTRUCTION, LCD_SET_DD_RAM_ADDRESS_INSTRUCTION | 0x00); // set cursor to the row start
@@ -34,7 +50,7 @@ void MCU_Task(void* p)
 	}
 
 	// Terminal
-	UART_AsyncTransmitString("Temparatura: ");
+	UART_AsyncTransmitString(temparature);
 
 
 	while(1)
