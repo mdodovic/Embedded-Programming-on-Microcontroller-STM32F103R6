@@ -40,6 +40,7 @@ Core/Src/driver_temp.c \
 Core/Src/driver_motor.c \
 Core/Src/driver_uart.c \
 Core/Src/driver_lcd.c \
+Core/Src/driver_keypad.c \
 Core/Src/homework.c \
 Core/Src/main.c \
 Core/Src/gpio.c \
