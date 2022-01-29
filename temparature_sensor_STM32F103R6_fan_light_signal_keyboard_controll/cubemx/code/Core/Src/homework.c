@@ -20,10 +20,16 @@
 
 #include "gpio.h"
 
+#include "timers.h"
+
 FanState fanState = TURNED_OFF;
 
 char tempText[4];
 uint32_t tempValue;
+
+TimerHandle_t TimerHandler;
+
+
 
 void homeworkTask(void *p)
 {
@@ -77,34 +83,33 @@ void homeworkTask(void *p)
 			UART_AsyncTransmitCharacter(tempText[i]);
 		}
 
-		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_RESET); // Red
-		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_13, GPIO_PIN_RESET); // Yellow
-		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_RESET); // Green
-		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_15, GPIO_PIN_RESET); // Blue
-
-		if(tempValue < 5)
-		{
-
-		}
-		else if(tempValue < 18)
+		if(5 < tempValue && tempValue <= 18)
 		{
 			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_15, GPIO_PIN_SET); // Blue
+			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_RESET);
+			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_13, GPIO_PIN_RESET);
+			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_RESET);
 		}
-		else if(tempValue < 25)
+		if(18 < tempValue && tempValue <= 25)
 		{
 			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_SET); // Green
+			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_RESET);
+			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_13, GPIO_PIN_RESET);
+			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_15, GPIO_PIN_RESET);
 		}
-		else if(tempValue < 30)
+		if(25 < tempValue && tempValue <= 30)
 		{
 			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_13, GPIO_PIN_SET); // Yellow
+			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_RESET);
+			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_RESET);
+			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_15, GPIO_PIN_RESET);
 		}
-		else if(tempValue < 40)
+		if(30 < tempValue && tempValue < 40)
 		{
 			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_SET); // Red
-		}
-		else
-		{
-
+			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_13, GPIO_PIN_RESET);
+			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_RESET);
+			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_15, GPIO_PIN_RESET);
 		}
 
 		vTaskDelay(pdMS_TO_TICKS(200));
@@ -121,8 +126,24 @@ void homeworkTask(void *p)
 
 }
 
+void TimerToggle(TimerHandle_t xTimer)
+{
+	if(tempValue >= 40)
+	{
+		HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_12); // Red
+	}
+	if(tempValue <= 35)
+	{
+		HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_15); // Blue
+	}
+}
+
 void homeworkInit()
 {
+
+	TimerHandler = xTimerCreate("timer", pdMS_TO_TICKS(1000), pdTRUE, NULL, TimerToggle);
+	xTimerStart(TimerHandler, portMAX_DELAY);
+
 	LCD_Init();
 	UART_Init();
 	MOTOR_Init();
