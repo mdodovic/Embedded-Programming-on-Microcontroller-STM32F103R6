@@ -18,6 +18,7 @@
 #include "driver_motor.h"
 #include "driver_temp.h"
 
+#include "gpio.h"
 
 FanState fanState = TURNED_OFF;
 
@@ -74,6 +75,36 @@ void homeworkTask(void *p)
 		{
 			LCD_CommandEnqueue(LCD_DATA, tempText[i]);
 			UART_AsyncTransmitCharacter(tempText[i]);
+		}
+
+		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_RESET); // Red
+		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_13, GPIO_PIN_RESET); // Yellow
+		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_RESET); // Green
+		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_15, GPIO_PIN_RESET); // Blue
+
+		if(tempValue < 5)
+		{
+
+		}
+		else if(tempValue < 18)
+		{
+			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_15, GPIO_PIN_SET); // Blue
+		}
+		else if(tempValue < 25)
+		{
+			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_SET); // Green
+		}
+		else if(tempValue < 30)
+		{
+			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_13, GPIO_PIN_SET); // Yellow
+		}
+		else if(tempValue < 40)
+		{
+			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_SET); // Red
+		}
+		else
+		{
+
 		}
 
 		vTaskDelay(pdMS_TO_TICKS(200));
