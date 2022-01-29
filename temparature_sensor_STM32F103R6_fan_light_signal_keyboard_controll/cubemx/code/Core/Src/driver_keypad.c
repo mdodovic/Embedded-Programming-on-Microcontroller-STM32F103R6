@@ -14,6 +14,7 @@
 #include "gpio.h"
 
 #include "driver_uart.h"
+#include "driver_motor.h"
 
 static char KEY_Map[4][3] = {
 		{'1', '2', '3'},
@@ -77,6 +78,8 @@ void KEY_Task()
 						KEY_PreviouslyReleased = 0;
 						xTimerStart(KEY_TimerHandle, portMAX_DELAY);
 						UART_AsyncTransmitCharacter(KEY_Map[row][column]);
+						STEP = KEY_Map[row][column] - '0';
+						INCREMENT = (9 + 1) / STEP;
 					}
 				}
 			}

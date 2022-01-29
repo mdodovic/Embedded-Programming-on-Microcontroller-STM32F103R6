@@ -8,30 +8,33 @@
 #include "tim.h"
 
 #define ARR 9
-#define STEP 2
-#define INCREMENT ((ARR + 1) / STEP)
-
-static uint32_t volatile compareRegisterValue = 0;
-
-void MOTOR_SpeedIncrease()
-{
-	if (compareRegisterValue < ARR + 1)
-	{
-		compareRegisterValue += INCREMENT;
-	}
-	htim3.Instance->CCR1 = compareRegisterValue;
-}
-
-void MOTOR_SpeedDecrease()
-{
-	if (compareRegisterValue > 0)
-	{
-		compareRegisterValue -= INCREMENT;
-	}
-	htim3.Instance->CCR1 = compareRegisterValue;
-}
+//#define STEP 2
+uint32_t STEP;
+//#define INCREMENT ((ARR + 1) / STEP)
+uint32_t INCREMENT;
+//static uint32_t volatile compareRegisterValue = 0;
+//
+//void MOTOR_SpeedIncrease()
+//{
+//	if (compareRegisterValue < ARR + 1)
+//	{
+//		compareRegisterValue += INCREMENT;
+//	}
+//	htim3.Instance->CCR1 = compareRegisterValue;
+//}
+//
+//void MOTOR_SpeedDecrease()
+//{
+//	if (compareRegisterValue > 0)
+//	{
+//		compareRegisterValue -= INCREMENT;
+//	}
+//	htim3.Instance->CCR1 = compareRegisterValue;
+//}
 
 void MOTOR_Init()
 {
-	HAL_TIM_OC_Start(&htim3, TIM_CHANNEL_1);
+	STEP = 3;
+	INCREMENT = ((ARR + 1) / STEP);
+	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
 }

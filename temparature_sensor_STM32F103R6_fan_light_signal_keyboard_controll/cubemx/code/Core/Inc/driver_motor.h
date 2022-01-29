@@ -8,6 +8,9 @@
 #ifndef CORE_INC_DRIVER_MOTOR_H_
 #define CORE_INC_DRIVER_MOTOR_H_
 
+extern uint32_t STEP;
+extern uint32_t INCREMENT;
+
 extern void MOTOR_SpeedIncrease();
 extern void MOTOR_SpeedDecrease();
 

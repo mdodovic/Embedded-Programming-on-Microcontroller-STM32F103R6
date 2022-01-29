@@ -8,10 +8,10 @@
 #ifndef CORE_INC_HOMEWORK_H_
 #define CORE_INC_HOMEWORK_H_
 
-typedef enum
-{
-	TURNED_OFF, SLOW, FAST
-} FanState;
+//typedef enum
+//{
+//	TURNED_OFF, VERY_SLOW, SLOW, FAST
+//} FanState;
 
 extern void homeworkInit();
 

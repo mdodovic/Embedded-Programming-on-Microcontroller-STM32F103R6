@@ -22,8 +22,9 @@
 #include "gpio.h"
 
 #include "timers.h"
+#include "tim.h"
 
-FanState fanState = TURNED_OFF;
+//FanState fanState = TURNED_OFF;
 
 char tempText[4];
 uint32_t tempValue;
@@ -40,8 +41,9 @@ void homeworkTask(void *p)
 	for(uint32_t i = 0; i < strlen(message); i++)
 	{
 		LCD_CommandEnqueue(LCD_DATA, message[i]);
-		UART_AsyncTransmitCharacter(message[i]);
+		//UART_AsyncTransmitCharacter(message[i]);
 	}
+	UART_AsyncTransmitString("Podeoci: ");
 
 	while(1)
 	{
@@ -49,32 +51,47 @@ void homeworkTask(void *p)
 		itoa(tempValue, tempText, 10);
 
 
-		FanState desiredFanState;
-		if(tempValue < 30)
+//		FanState desiredFanState;
+		if(tempValue < 25)
 		{
-			desiredFanState = TURNED_OFF;
+			htim3.Instance->CCR1 = 0;
+//          desiredFanState = TURNED_OFF;
 		}
 		else if(tempValue < 35)
 		{
-			desiredFanState = SLOW;
+//			desiredFanState = VERY_SLOW;
+
+			uint32_t speedStep = (35-25) / (STEP - 2);
+			for(uint32_t i = 0; i < STEP; i ++)
+			{
+				if(tempValue > i * speedStep + 25 && tempValue <= (i + 1) * speedStep + 25)
+				{
+					htim3.Instance->CCR1 = (i+1) * INCREMENT;
+				}
+			}
 		}
+//		else if(tempValue < 35)
+//		{
+//			desiredFanState = SLOW;
+//		}
 		else
 		{
-			desiredFanState = FAST;
+			htim3.Instance->CCR1 = 10;
+// 			desiredFanState = FAST;
 		}
 
-		for(uint32_t i = 0; i < abs(fanState - desiredFanState); i++)
-		{
-			if(fanState > desiredFanState)
-			{
-				MOTOR_SpeedDecrease();
-			}
-			else
-			{
-				MOTOR_SpeedIncrease();
-			}
-		}
-		fanState = desiredFanState;
+//		for(uint32_t i = 0; i < abs(fanState - desiredFanState); i++)
+//		{
+//			if(fanState > desiredFanState)
+//			{
+//				MOTOR_SpeedDecrease();
+//			}
+//			else
+//			{
+//				MOTOR_SpeedIncrease();
+//			}
+//		}
+//		fanState = desiredFanState;
 
 		LCD_CommandEnqueue(LCD_INSTRUCTION, LCD_SET_DD_RAM_ADDRESS_INSTRUCTION | 0x0D);
 
