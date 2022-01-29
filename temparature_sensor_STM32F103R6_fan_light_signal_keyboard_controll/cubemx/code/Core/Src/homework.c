@@ -83,7 +83,7 @@ void homeworkTask(void *p)
 			LCD_CommandEnqueue(LCD_DATA, tempText[i]);
 			//UART_AsyncTransmitCharacter(tempText[i]);
 		}
-/*
+
 		if(5 < tempValue && tempValue <= 18)
 		{
 			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_15, GPIO_PIN_SET); // Blue
@@ -112,7 +112,7 @@ void homeworkTask(void *p)
 			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_RESET);
 			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_15, GPIO_PIN_RESET);
 		}
-*/
+
 		vTaskDelay(pdMS_TO_TICKS(200));
 
 		LCD_CommandEnqueue(LCD_INSTRUCTION, LCD_SET_DD_RAM_ADDRESS_INSTRUCTION | 0x0D);
@@ -142,8 +142,8 @@ void TimerToggle(TimerHandle_t xTimer)
 void homeworkInit()
 {
 
-	//TimerHandler = xTimerCreate("timer", pdMS_TO_TICKS(1000), pdTRUE, NULL, TimerToggle);
-	//xTimerStart(TimerHandler, portMAX_DELAY);
+	TimerHandler = xTimerCreate("timer", pdMS_TO_TICKS(1000), pdTRUE, NULL, TimerToggle);
+	xTimerStart(TimerHandler, portMAX_DELAY);
 
 	LCD_Init();
 	UART_Init();

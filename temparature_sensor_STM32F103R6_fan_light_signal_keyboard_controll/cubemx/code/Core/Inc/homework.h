@@ -22,6 +22,7 @@ extern void homeworkInit();
  * UART_Receive -> 20
  * TEMP_Task -> 2
  * homeworkTask -> 5
+ * KeyPad -> 26
  */
 
 
