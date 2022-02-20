@@ -2,11 +2,11 @@
 
 Microcontroller STM32F103R6 controls different systems:
 
-### temparature_sensor_STM32F103R6_fan_light_signal_keyboard_controll
+## temparature_sensor_STM32F103R6_fan_light_signal_keyboard_controll
 
 Realize temparature sensor and fan speed controlling (based on temparature). Show temparature on LCD display, controll score using virutal terminal (UART protocol). Keyboard is realized to controll fan speed.
 
-### temparature_sensor_STM32F103R6_fan_controller
+## temparature_sensor_STM32F103R6_fan_controller
 
 Realize temparature sensor and fan speed controlling (based on temparature). Show temparature on LCD display, controll score using virutal terminal (UART protocol).
 
